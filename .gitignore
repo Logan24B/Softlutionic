@@ -1,0 +1,379 @@
+# Creado por https://www.toptal.com/developers/gitignore/api/django,python,pycharm
+# Editar en https://www.toptal.com/developers/gitignore?templates=django,python,pycharm
+
+### Django ###
+*.registro
+*.olla
+*.pyc
+__pycache__/
+configuración_local.py
+db.sqlite3
+diario db.sqlite3
+medios de comunicación
+
+# Si su proceso de compilación incluye ejecutar collectstatic, entonces probablemente no necesite ni desee incluir staticfiles/
+# en tu repositorio Git. Actualiza y descomenta la siguiente línea según corresponda.
+# <nombre-del-proyecto-django>/archivos-estáticos/
+
+### Pila de Django.Python ###
+# Archivos DLL compilados en bytes / optimizados
+*.py[bacalao]
+*$py.clase
+
+# Extensiones de C
+*.entonces
+
+# Distribución / embalaje
+.Pitón
+construir/
+huevos en desarrollo/
+dist/
+descargas/
+huevos/
+.huevos/
+lib/
+lib64/
+regiones/
+sdist/
+var/
+ruedas/
+compartir/python-wheels/
+*.egg-info/
+.instalado.cfg
+*.huevo
+MANIFIESTO
+
+# PyInstaller
+# Generalmente, estos archivos se escriben mediante un script de Python a partir de una plantilla.
+# antes de que PyInstaller construya el exe, para poder inyectarle fecha y otra información.
+*.manifiesto
+*.especulación
+
+# Registros del instalador
+pip-log.txt
+pip-eliminar-este-directorio.txt
+
+# Informes de pruebas unitarias/cobertura
+htmlcov/
+.toxic/
+.nox/
+.cobertura
+.cobertura.*
+.cache
+pruebas de nariz.xml
+cobertura.xml
+*.cubrir
+*.py,portada
+.hipótesis/
+.pytest_cache/
+cubrir/
+
+# Traducciones
+*.mes
+
+# Cosas de Django:
+
+# Cosas del matraz:
+instancia/
+.webassets-cache
+
+# Cosas raras:
+.desordenado
+
+# Documentación de Sphinx
+docs/_build/
+
+# PyBuilder
+.pybuilder/
+objetivo/
+
+# Cuaderno Jupyter
+.ipynb_puntos de control
+
+#IPython
+perfil_predeterminado/
+ipython_config.py
+
+#pyenv
+# Para una biblioteca o un paquete, es posible que desees ignorar estos archivos ya que el código es
+# destinados a ejecutarse en múltiples entornos; de lo contrario, regístrelos en:
+# .python-version
+
+# pipenv
+# Según pypa/pipenv#598, se recomienda incluir Pipfile.lock en el control de versiones.
+# Sin embargo, en caso de colaboración, si tiene dependencias o dependencias específicas de la plataforma
+# al no tener soporte multiplataforma, pipenv puede instalar dependencias que no funcionan o no
+# instalar todas las dependencias necesarias.
+#Pipfile.lock
+
+# poesía
+# Similar a Pipfile.lock, generalmente se recomienda incluir poetry.lock en el control de versiones.
+# Esto se recomienda especialmente para paquetes binarios para garantizar la reproducibilidad y es más
+# comúnmente ignorado por las bibliotecas.
+# https://python-poetry.org/docs/basic-usage/#confirmar-su-archivo-poetrylock-al-control-de-versiones
+#poesía.bloqueo
+
+#pdm
+# Similar a Pipfile.lock, generalmente se recomienda incluir pdm.lock en el control de versiones.
+#pdm.lock
+# pdm almacena configuraciones de todo el proyecto en .pdm.toml, pero se recomienda no incluirlo
+# en el control de versiones.
+# https://pdm.fming.dev/#use-with-ide
+.pdm.toml
+
+# PEP 582; utilizado por ejemplo en github.com/David-OConnor/pyflow y github.com/pdm-project/pdm
+__pypackages__/
+
+# Cosas de apio
+horario de celerybeat
+celerybeat.pid
+
+# Archivos analizados por SageMath
+*.sage.py
+
+# Entornos
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Configuración del proyecto Spyder
+.proyecto spyder
+.proyecto espía
+
+# Configuración del proyecto de cuerda
+.proyecto de cuerda
+
+# Documentación de mkdocs
+/sitio
+
+#mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Comprobador de tipo Pyre
+.pira/
+
+# analizador de tipos estáticos pytype
+.pytype/
+
+# Símbolos de depuración de Cython
+depuración de cython/
+
+#PyCharm
+# La plantilla específica de JetBrains se mantiene en un JetBrains.gitignore separado que puede
+# se puede encontrar en https://github.com/github/gitignore/blob/main/Global/JetBrains.gitignore
+# y se puede agregar al gitignore global o fusionarlo en este archivo. Para una versión más nuclear
+# Opción (no recomendada) puedes descomentar lo siguiente para ignorar toda la carpeta de ideas.
+#.idea/
+
+### PyCharm ###
+# Cubre los IDE de JetBrains: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm, CLion, Android Studio, WebStorm y Rider
+# Referencia: https://intellij-support.jetbrains.com/hc/en-us/articles/206544839
+
+# Cosas específicas del usuario
+.idea/**/espacio de trabajo.xml
+.idea/**/tareas.xml
+.idea/**/usage.statistics.xml
+.idea/**/diccionarios
+.idea/**/estante
+
+# Específico del usuario de AWS
+.idea/**/aws.xml
+
+# Archivos generados
+.idea/**/contentModel.xml
+
+# Archivos sensibles o de alta rotación
+.idea/**/fuentesdedatos/
+.idea/**/dataSources.ids
+.idea/**/dataSources.local.xml
+.idea/**/sqlDataSources.xml
+.idea/**/dynamic.xml
+.idea/**/uiDesigner.xml
+.idea/**/dbnavigator.xml
+
+#Gradle
+.idea/**/gradle.xml
+.idea/**/bibliotecas
+
+# Gradle y Maven con importación automática
+# Al usar Gradle o Maven con importación automática, debe excluir los archivos del módulo,
+# ya que se volverán a crear y pueden causar pérdida de clientes. Descomente si usa
+# importación automática.
+# .idea/artefactos
+# .idea/compilador.xml
+# .idea/jarRepositories.xml
+# .idea/modules.xml
+# .idea/*.iml
+# .idea/módulos
+# *.iml
+# *.ipr
+
+#CMake
+cmake-build-*/
+
+# Complemento Mongo Explorer
+.idea/**/mongoSettings.xml
+
+# Formato de proyecto basado en archivos
+*.iws
+
+#IntelliJ
+afuera/
+
+# Complemento mpeltonen/sbt-idea
+.idea_modules/
+
+# Complemento de JIRA
+complemento atlassian-ide-plugin.xml
+
+# Complemento de Clojure cursivo
+.idea/replstate.xml
+
+# Complemento SonarLint
+.idea/sonarlint/
+
+# Complemento Crashlytics (para Android Studio e IntelliJ)
+com_crashlytics_export_strings.xml
+propiedades de crashlytics
+propiedades de construcción de crashlytics
+tela.propiedades
+
+# Cliente Rest basado en editor
+.idea/httpRequests
+
+# Archivo de caché serializado de Android Studio 3.1+
+.idea/caches/sumas_de_verificación_del_archivo_de_compilación.ser
+
+### Parche de PyCharm ###
+# Motivo del comentario: https://github.com/joeblau/gitignore.io/issues/186#issuecomment-215987721
+
+# *.iml
+# módulos.xml
+# .idea/misc.xml
+# *.ipr
+
+# Complemento de Sonarlint
+# https://plugins.jetbrains.com/plugin/7973-sonarlint
+.idea/**/sonarlint/
+
+# Complemento SonarQube
+# https://plugins.jetbrains.com/plugin/7238-sonarqube-community-plugin
+.idea/**/sonarIssues.xml
+
+# Complemento Markdown Navigator
+# https://plugins.jetbrains.com/plugin/7896-markdown-navigator-enhanced
+.idea/**/markdown-navigator.xml
+.idea/**/markdown-navigator-enh.xml
+.idea/**/navegador-markdown/
+
+# Error en la creación de archivos de caché
+# Ver https://youtrack.jetbrains.com/issue/JBR-2257
+.idea/$ARCHIVO_DE_CACHÉ$
+
+# Complemento CodeStream
+# https://plugins.jetbrains.com/plugin/12206-codestream
+.idea/codestream.xml
+
+# Complemento del kit de herramientas de Azure para IntelliJ
+# https://plugins.jetbrains.com/plugin/8053-azure-toolkit-for-intellij
+.idea/**/azureSettings.xml
+
+### Pitón ###
+# Archivos DLL compilados en bytes / optimizados
+
+# Extensiones de C
+
+# Distribución / embalaje
+
+# PyInstaller
+# Generalmente, estos archivos se escriben mediante un script de Python a partir de una plantilla.
+# antes de que PyInstaller construya el exe, para poder inyectarle fecha y otra información.
+
+# Registros del instalador
+
+# Informes de pruebas unitarias/cobertura
+
+# Traducciones
+
+# Cosas de Django:
+
+# Cosas del matraz:
+
+# Cosas raras:
+
+# Documentación de Sphinx
+
+# PyBuilder
+
+# Cuaderno Jupyter
+
+#IPython
+
+#pyenv
+# Para una biblioteca o un paquete, es posible que desees ignorar estos archivos ya que el código es
+# destinados a ejecutarse en múltiples entornos; de lo contrario, regístrelos en:
+# .python-version
+
+# pipenv
+# Según pypa/pipenv#598, se recomienda incluir Pipfile.lock en el control de versiones.
+# Sin embargo, en caso de colaboración, si tiene dependencias o dependencias específicas de la plataforma
+# al no tener soporte multiplataforma, pipenv puede instalar dependencias que no funcionan o no
+# instalar todas las dependencias necesarias.
+
+# poesía
+# Similar a Pipfile.lock, generalmente se recomienda incluir poetry.lock en el control de versiones.
+# Esto se recomienda especialmente para paquetes binarios para garantizar la reproducibilidad y es más
+# comúnmente ignorado por las bibliotecas.
+# https://python-poetry.org/docs/basic-usage/#confirmar-su-archivo-poetrylock-al-control-de-versiones
+
+#pdm
+# Similar a Pipfile.lock, generalmente se recomienda incluir pdm.lock en el control de versiones.
+# pdm almacena configuraciones de todo el proyecto en .pdm.toml, pero se recomienda no incluirlo
+# en el control de versiones.
+# https://pdm.fming.dev/#use-with-ide
+
+# PEP 582; utilizado por ejemplo en github.com/David-OConnor/pyflow y github.com/pdm-project/pdm
+
+# Cosas de apio
+
+# Archivos analizados por SageMath
+
+# Entornos
+
+# Configuración del proyecto Spyder
+
+# Configuración del proyecto de cuerda
+
+# Documentación de mkdocs
+
+#mypy
+
+# Comprobador de tipo Pyre
+
+# analizador de tipos estáticos pytype
+
+# Símbolos de depuración de Cython
+
+#PyCharm
+# La plantilla específica de JetBrains se mantiene en un JetBrains.gitignore separado que puede
+# se puede encontrar en https://github.com/github/gitignore/blob/main/Global/JetBrains.gitignore
+# y se puede agregar al gitignore global o fusionarlo en este archivo. Para una versión más nuclear
+# Opción (no recomendada) puedes descomentar lo siguiente para ignorar toda la carpeta de ideas.
+
+### Parche de Python ###
+# Archivo de configuración local de Poetry: https://python-poetry.org/docs/configuration/#local-configuration
+poesía.toml
+
+# ruff
+.ruff_cache/
+
+# Archivos de configuración LSP
+pyrightconfig.json
+
+# Fin de https://www.toptal.com/developers/gitignore/api/django,python,pycharm
