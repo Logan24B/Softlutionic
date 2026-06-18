@@ -1,0 +1,139 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SoftFactur | Moras</title>
+  <link rel="stylesheet" href="../css/styles.css" />
+  <link rel="stylesheet" href="../css/modules.css" />
+  <link rel="stylesheet" href="../css/forms.css" />
+  <link rel="stylesheet" href="../css/tables.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" aria-label="Navegación principal">
+      <a class="brand" href="../index.html" aria-label="Ir al dashboard">
+        <img src="../assets/logo.png" alt="" />
+        <span>SoftFactur</span>
+      </a>
+
+      <nav class="menu">
+        <h2 class="menu-title">Gestión</h2>
+        <a class="menu-link" href="../index.html"><i class="fa-solid fa-chart-line" aria-hidden="true"></i><span>Dashboard</span></a>
+        <a class="menu-link" href="facturas.html"><i class="fa-solid fa-file-invoice" aria-hidden="true"></i><span>Facturas</span></a>
+        <a class="menu-link" href="clientes.html"><i class="fa-solid fa-users" aria-hidden="true"></i><span>Clientes</span></a>
+        <a class="menu-link" href="servicios.html"><i class="fa-solid fa-screwdriver-wrench" aria-hidden="true"></i><span>Servicios</span></a>
+        <a class="menu-link" href="pagos.html"><i class="fa-solid fa-credit-card" aria-hidden="true"></i><span>Pagos</span></a>
+        <a class="menu-link active" href="moras.html" aria-current="page"><i class="fa-solid fa-calendar-xmark" aria-hidden="true"></i><span>Moras</span></a>
+        <a class="menu-link" href="reportes.html"><i class="fa-solid fa-chart-pie" aria-hidden="true"></i><span>Reportes</span></a>
+        <h2 class="menu-title">Administración</h2>
+        <a class="menu-link" href="usuarios.html"><i class="fa-solid fa-user-gear" aria-hidden="true"></i><span>Usuarios</span></a>
+        <a class="menu-link" href="configuracion.html"><i class="fa-solid fa-gear" aria-hidden="true"></i><span>Configuración</span></a>
+      </nav>
+
+      <section class="user-box" aria-label="Sesión actual">
+        <small>Sesión activa</small>
+        <strong>Administrador</strong>
+      </section>
+    </aside>
+
+    <main class="main-content">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">Control de moras</p>
+          <h1>Moras de facturas mensuales</h1>
+        </div>
+      </header>
+
+      <section class="module-page">
+        <div class="module-header">
+          <div>
+            <h2 id="moras-title">Seguimiento de mora</h2>
+            <p>Consulta moras generadas por facturas mensuales vencidas y controla si ya fueron pagadas.</p>
+          </div>
+          <div class="module-actions">
+            <button class="button-link secondary" type="button" id="refreshMorasButton">
+              <i class="fa-solid fa-rotate" aria-hidden="true"></i>
+              Actualizar
+            </button>
+          </div>
+        </div>
+
+        <section class="metrics-grid compact" aria-label="Resumen de moras">
+          <article class="metric-card orange">
+            <div>
+              <h3>Moras pendientes</h3>
+              <strong id="pendingMorasCard">0</strong>
+              <p>Requieren cobro</p>
+            </div>
+            <i class="fa-solid fa-hourglass-half" aria-hidden="true"></i>
+          </article>
+          <article class="metric-card teal">
+            <div>
+              <h3>Moras pagadas</h3>
+              <strong id="paidMorasCard">0</strong>
+              <p>Registro congelado</p>
+            </div>
+            <i class="fa-solid fa-circle-check" aria-hidden="true"></i>
+          </article>
+          <article class="metric-card purple">
+            <div>
+              <h3>Monto pendiente</h3>
+              <strong id="pendingAmountCard">C$ 0.00</strong>
+              <p>Suma de mora activa</p>
+            </div>
+            <i class="fa-solid fa-coins" aria-hidden="true"></i>
+          </article>
+        </section>
+
+        <section class="table-panel" aria-labelledby="moras-table-title">
+          <div class="panel-header">
+            <div>
+              <h2 id="moras-table-title">Moras registradas</h2>
+              <p>Factura, cliente, días acumulados, monto y estado de pago de la mora.</p>
+            </div>
+          </div>
+
+          <form class="line-form client-filters" aria-label="Filtros de moras">
+            <label>
+              <span>Buscar</span>
+              <input id="moraSearchInput" type="search" placeholder="Cliente, factura o descripción" />
+            </label>
+            <label>
+              <span>Estado</span>
+              <select id="moraStatusFilter">
+                <option value="todas">Todas</option>
+                <option value="pendientes">Pendientes</option>
+                <option value="pagadas">Pagadas</option>
+              </select>
+            </label>
+          </form>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th scope="col">Nro.</th>
+                  <th scope="col">Factura</th>
+                  <th scope="col">Cliente</th>
+                  <th scope="col">Inicio</th>
+                  <th scope="col">Último cálculo</th>
+                  <th scope="col">Días</th>
+                  <th scope="col">Monto</th>
+                  <th scope="col">Estado</th>
+                  <th scope="col">Acción</th>
+                </tr>
+              </thead>
+              <tbody id="morasTable"></tbody>
+            </table>
+          </div>
+        </section>
+      </section>
+    </main>
+  </div>
+  <script src="../js/auth.js?v=20260618-admin-menu-display"></script>
+  <script src="../js/moras.js?v=moras-modulo-20260614"></script>
+</body>
+</html>
+

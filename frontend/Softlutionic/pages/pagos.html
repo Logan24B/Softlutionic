@@ -1,0 +1,218 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SoftFactur | Pagos</title>
+  <link rel="stylesheet" href="../css/styles.css" />
+  <link rel="stylesheet" href="../css/modules.css" />
+  <link rel="stylesheet" href="../css/forms.css" />
+  <link rel="stylesheet" href="../css/tables.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" aria-label="Navegación principal">
+      <a class="brand" href="../index.html" aria-label="Ir al dashboard">
+        <img src="../assets/logo.png" alt="" />
+        <span>SoftFactur</span>
+      </a>
+      <nav class="menu">
+        <h2 class="menu-title">Gestión</h2>
+        <a class="menu-link" href="../index.html"><i class="fa-solid fa-chart-line" aria-hidden="true"></i><span>Dashboard</span></a>
+        <a class="menu-link" href="facturas.html"><i class="fa-solid fa-file-invoice" aria-hidden="true"></i><span>Facturas</span></a>
+        <a class="menu-link" href="clientes.html"><i class="fa-solid fa-users" aria-hidden="true"></i><span>Clientes</span></a>
+        <a class="menu-link" href="servicios.html"><i class="fa-solid fa-screwdriver-wrench" aria-hidden="true"></i><span>Servicios</span></a>
+        <a class="menu-link active" href="pagos.html" aria-current="page"><i class="fa-solid fa-credit-card" aria-hidden="true"></i><span>Pagos</span></a>
+        <a class="menu-link" href="moras.html"><i class="fa-solid fa-calendar-xmark" aria-hidden="true"></i><span>Moras</span></a>
+        <a class="menu-link" href="reportes.html"><i class="fa-solid fa-chart-pie" aria-hidden="true"></i><span>Reportes</span></a>
+        <h2 class="menu-title">Administración</h2>
+        <a class="menu-link" href="usuarios.html"><i class="fa-solid fa-user-gear" aria-hidden="true"></i><span>Usuarios</span></a>
+        <a class="menu-link" href="configuracion.html"><i class="fa-solid fa-gear" aria-hidden="true"></i><span>Configuración</span></a>
+      </nav>
+      <section class="user-box" aria-label="Sesión actual">
+        <small>Sesión activa</small>
+        <strong>Administrador</strong>
+      </section>
+    </aside>
+
+    <main class="main-content">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">Control de pagos</p>
+          <h1>Pagos y facturas pendientes</h1>
+        </div>
+      </header>
+
+      <section class="module-page">
+        <div class="module-header">
+          <div>
+            <h2 id="payment-form-title">Gestionar pago</h2>
+            <p>Registra, edita y cambia el estado de pagos asociados a facturas reales.</p>
+          </div>
+
+          <div class="module-actions">
+            <button class="button-link secondary" type="button" id="clearPaymentButton">
+              <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+              Limpiar
+            </button>
+            <button class="button-link" type="button" id="savePaymentButton">
+              <i class="fa-solid fa-floppy-disk" aria-hidden="true"></i>
+              Guardar pago
+            </button>
+          </div>
+        </div>
+
+        <section class="metrics-grid compact" aria-label="Resumen de pagos">
+          <article class="metric-card teal">
+            <div>
+              <h3>Pagos registrados</h3>
+              <strong id="paymentsTotal">0</strong>
+              <p>Desde la tabla Pagos</p>
+            </div>
+            <i class="fa-solid fa-receipt" aria-hidden="true"></i>
+          </article>
+          <article class="metric-card orange">
+            <div>
+              <h3>Facturas pendientes</h3>
+              <strong id="pendingTotal">0</strong>
+              <p>Sin pago confirmado</p>
+            </div>
+            <i class="fa-solid fa-clock" aria-hidden="true"></i>
+          </article>
+        </section>
+
+        <section class="invoice-layout">
+          <article class="panel">
+            <div class="panel-header">
+              <div>
+                <h2>Datos del pago</h2>
+                <p>Información principal del recibo</p>
+              </div>
+            </div>
+
+            <form class="form-grid" aria-label="Formulario de pago">
+              <label>
+                <span>Factura</span>
+                <select id="paymentInvoiceSelect" name="factura"></select>
+              </label>
+
+              <label>
+                <span>Número de recibo</span>
+                <input id="receiptInput" type="number" min="1" name="recibo" />
+              </label>
+
+              <label>
+                <span>Fecha y hora de pago</span>
+                <input id="paymentDateInput" type="datetime-local" name="fechaPago" />
+              </label>
+
+              <label>
+                <span>Monto pagado</span>
+                <input id="paymentAmountInput" type="number" min="0" step="0.01" name="monto" />
+              </label>
+
+              <label>
+                <span>Método de pago</span>
+                <select id="paymentMethodSelect" name="metodo">
+                  <option value="false">Efectivo</option>
+                  <option value="true">Transferencia</option>
+                </select>
+              </label>
+
+              <label>
+                <span>Estado</span>
+                <select id="paymentStatusSelect" name="estado">
+                  <option value="false">Pendiente</option>
+                  <option value="true">Pagado</option>
+                </select>
+              </label>
+            </form>
+          </article>
+
+          <aside class="panel summary-panel" aria-label="Resumen del pago">
+            <div class="panel-header">
+              <div>
+                <h2>Factura seleccionada</h2>
+                <p>Información previa para validar el pago</p>
+              </div>
+            </div>
+
+            <dl class="summary-list">
+              <div>
+                <dt>Cliente</dt>
+                <dd id="selectedPaymentCustomer">Sin cliente</dd>
+              </div>
+              <div>
+                <dt>Factura</dt>
+                <dd id="selectedPaymentInvoice">Sin factura</dd>
+              </div>
+              <div>
+                <dt>Monto factura</dt>
+                <dd id="selectedPaymentAmount">C$ 0.00</dd>
+              </div>
+              <div class="summary-total">
+                <dt>Estado</dt>
+                <dd id="selectedPaymentStatus">Pendiente</dd>
+              </div>
+            </dl>
+          </aside>
+        </section>
+
+        <section class="table-panel" aria-labelledby="pending-title">
+          <div class="panel-header">
+            <div>
+              <h2 id="pending-title">Facturas pendientes a pagar</h2>
+              <p>Cliente, número de factura y monto antes de gestionar el pago.</p>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th scope="col">Factura</th>
+                  <th scope="col">Cliente</th>
+                  <th scope="col">Vencimiento</th>
+                  <th scope="col">Monto</th>
+                  <th scope="col">Estado</th>
+                  <th scope="col">Acción</th>
+                </tr>
+              </thead>
+              <tbody id="pendingInvoicesTable"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="table-panel" aria-labelledby="payments-title">
+          <div class="panel-header">
+            <div>
+              <h2 id="payments-title">Pagos registrados</h2>
+              <p>Registros actuales de la entidad Pagos.</p>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th scope="col">Recibo</th>
+                  <th scope="col">Factura</th>
+                  <th scope="col">Cliente</th>
+                  <th scope="col">Fecha</th>
+                  <th scope="col">Monto</th>
+                  <th scope="col">Método</th>
+                  <th scope="col">Estado</th>
+                  <th scope="col">Acción</th>
+                </tr>
+              </thead>
+              <tbody id="paymentsTable"></tbody>
+            </table>
+          </div>
+        </section>
+      </section>
+    </main>
+  </div>
+  <script src="../js/auth.js?v=20260618-admin-menu-display"></script>
+  <script src="../js/pagos.js?v=mora-factura-pago-20260614"></script>
+</body>
+</html>
+

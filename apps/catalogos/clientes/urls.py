@@ -8,6 +8,8 @@ router = DefaultRouter()
 # 'clientes' será el prefijo de la URL, y 'ClienteViewSet' la lógica
 router.register(r'clientes', ClienteViewSet, basename='cliente')
 
+app_name = 'clientes'
+
 urlpatterns = [
     # Incluimos todas las rutas generadas por el router
     path('', include(router.urls)),

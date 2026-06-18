@@ -1,0 +1,640 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Reporte Tecnico - SoftFactur</title>
+  <style>
+    @page {
+      size: letter;
+      margin: 0.65in;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      color: #172033;
+      font-family: "Times New Roman", Times, serif;
+      font-size: 12pt;
+      line-height: 1.45;
+      background: #ffffff;
+    }
+
+    h1,
+    h2,
+    h3 {
+      margin: 0 0 10px;
+      color: #111827;
+      line-height: 1.15;
+    }
+
+    h1 {
+      font-size: 24pt;
+      text-align: center;
+    }
+
+    h2 {
+      margin-top: 28px;
+      padding-bottom: 5px;
+      border-bottom: 1px solid #cbd5e1;
+      font-size: 17pt;
+    }
+
+    h3 {
+      margin-top: 18px;
+      font-size: 13.5pt;
+    }
+
+    p {
+      margin: 0 0 10px;
+    }
+
+    ul {
+      margin-top: 5px;
+      padding-left: 22px;
+    }
+
+    li {
+      margin-bottom: 5px;
+    }
+
+    code {
+      padding: 1px 4px;
+      border-radius: 3px;
+      background: #f1f5f9;
+      color: #0f172a;
+      font-family: Consolas, "Courier New", monospace;
+      font-size: 10pt;
+    }
+
+    pre {
+      margin: 10px 0 14px;
+      padding: 12px;
+      border: 1px solid #d7dde8;
+      border-radius: 6px;
+      background: #f8fafc;
+      white-space: pre-wrap;
+      font-family: Consolas, "Courier New", monospace;
+      font-size: 9.5pt;
+      line-height: 1.35;
+    }
+
+    table {
+      width: 100%;
+      margin: 12px 0 16px;
+      border-collapse: collapse;
+      font-size: 10.5pt;
+    }
+
+    th,
+    td {
+      padding: 8px;
+      border: 1px solid #cbd5e1;
+      vertical-align: top;
+      text-align: left;
+    }
+
+    th {
+      background: #eef2f7;
+    }
+
+    .cover {
+      display: grid;
+      align-content: center;
+      min-height: 9.2in;
+      text-align: center;
+      page-break-after: always;
+    }
+
+    .cover img {
+      width: 280px;
+      margin: 0 auto 22px;
+    }
+
+    .subtitle {
+      color: #475569;
+      font-size: 14pt;
+    }
+
+    .meta {
+      margin-top: 34px;
+      color: #475569;
+      font-size: 11pt;
+    }
+
+    .page-break {
+      page-break-before: always;
+    }
+
+    .note {
+      padding: 10px 12px;
+      border-left: 4px solid #6d5dfc;
+      background: #f8fafc;
+    }
+  </style>
+</head>
+<body>
+  <section class="cover">
+    <img src="../assets/logo.png" alt="Logo SoftFactur" />
+    <h1>Reporte tecnico del proyecto SoftFactur</h1>
+    <p class="subtitle">Sistema web superficial de facturación, clientes y vista previa de factura</p>
+    <p class="meta">
+      Proyecto preparado para defensa universitaria<br />
+      Fecha del reporte: 29 de abril de 2026
+    </p>
+  </section>
+
+  <h2>1. Resumen general</h2>
+  <p>
+    SoftFactur es una maqueta web administrativa orientada a un sistema de facturación.
+    El proyecto esta construido con HTML, CSS y JavaScript puro. No utiliza backend ni base
+    de datos real; los datos se simulan en arreglos de JavaScript dentro del archivo
+    <code>js/data.js</code>. Esto permite demostrar flujos importantes durante una defensa
+    universitaria sin depender de servidores, autenticación ni persistencia.
+  </p>
+
+  <p>Durante el trabajo realizado se completaron principalmente tres areas:</p>
+  <ul>
+    <li>Dashboard principal con navegación, métricas, gráficas simuladas y últimas facturas.</li>
+    <li>Módulo de Facturas con formulario, detalle de servicios, cálculo de totales y vista previa imprimible.</li>
+    <li>Módulo de Clientes con CRUD simulado, búsqueda, filtros, control de estado, tarjetas resumen y vista rapida.</li>
+  </ul>
+
+  <h2>2. Estructura de archivos trabajados</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Archivo</th>
+        <th>Funcion dentro del proyecto</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>index.html</code></td>
+        <td>Pagina principal o dashboard del sistema.</td>
+      </tr>
+      <tr>
+        <td><code>pages/facturas.html</code></td>
+        <td>Módulo para crear una factura ficticia y generar una vista previa en formato carta.</td>
+      </tr>
+      <tr>
+        <td><code>pages/clientes.html</code></td>
+        <td>Módulo CRUD simulado para administrar clientes mediante altas, edición y estado activo/inactivo.</td>
+      </tr>
+      <tr>
+        <td><code>css/styles.css</code></td>
+        <td>Estilos generales del layout: sidebar, topbar, dashboard, tarjetas, paneles y tablas base.</td>
+      </tr>
+      <tr>
+        <td><code>css/modules.css</code></td>
+        <td>Estilos reutilizables para módulos internos, vista previa de factura e impresión.</td>
+      </tr>
+      <tr>
+        <td><code>css/forms.css</code></td>
+        <td>Estilos para formularios, campos, filtros y formularios de linea.</td>
+      </tr>
+      <tr>
+        <td><code>css/tables.css</code></td>
+        <td>Estilos complementarios para acciónes en tablas, botones de icono y celdas vacias.</td>
+      </tr>
+      <tr>
+        <td><code>js/app.js</code></td>
+        <td>Renderiza las últimas facturas en el dashboard.</td>
+      </tr>
+      <tr>
+        <td><code>js/data.js</code></td>
+        <td>Base de datos simulada y funciones auxiliares del sistema.</td>
+      </tr>
+      <tr>
+        <td><code>js/facturas.js</code></td>
+        <td>Controla el formulario de facturas, cálculos, detalle y vista previa imprimible.</td>
+      </tr>
+      <tr>
+        <td><code>js/clientes.js</code></td>
+        <td>Controla el CRUD simulado del módulo Clientes.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>3. Dashboard principal: <code>index.html</code></h2>
+  <p>
+    El archivo <code>index.html</code> funciona como pantalla inicial del sistema. Su estructura
+    esta dividida en un contenedor principal llamado <code>app-shell</code>, una barra lateral
+    de navegación y un área principal de contenido.
+  </p>
+
+  <h3>3.1 Encabezado HTML</h3>
+  <pre>&lt;head&gt;
+  &lt;meta charset="UTF-8" /&gt;
+  &lt;meta name="viewport" content="width=device-width, initial-scale=1.0" /&gt;
+  &lt;link rel="stylesheet" href="css/styles.css" /&gt;
+&lt;/head&gt;</pre>
+  <p>
+    Este bloque define la codificacion del documento, adapta la página a dispositivos moviles
+    y carga la hoja de estilos principal. También se carga Font Awesome para mostrar iconos
+    en botones, menus y tarjetas.
+  </p>
+
+  <h3>3.2 Sidebar o menu lateral</h3>
+  <pre>&lt;aside class="sidebar"&gt;
+  &lt;a class="brand" href="index.html"&gt;
+    &lt;img src="assets/logo.png" alt="" /&gt;
+    &lt;span&gt;SoftFactur&lt;/span&gt;
+  &lt;/a&gt;
+  &lt;nav class="menu"&gt;...&lt;/nav&gt;
+&lt;/aside&gt;</pre>
+  <p>
+    Este bloque crea la navegación principal. Incluye el logo, el nombre del sistema y enlaces
+    a Dashboard, Facturas, Clientes, Productos, Pagos, Reportes, Usuarios y Configuración.
+    La clase <code>active</code> marca la página actual visualmente.
+  </p>
+
+  <h3>3.3 Topbar</h3>
+  <p>
+    El bloque <code>topbar</code> muestra el titulo de la pantalla, accesos rapidos, botones
+    de mensajes, notificaciones y perfil. Su objetivo es dar apariencia de sistema administrativo
+    real.
+  </p>
+
+  <h3>3.4 Tarjetas de métricas</h3>
+  <pre>&lt;section class="metrics-grid"&gt;
+  &lt;article class="metric-card purple"&gt;...&lt;/article&gt;
+  &lt;article class="metric-card orange"&gt;...&lt;/article&gt;
+&lt;/section&gt;</pre>
+  <p>
+    Muestra indicadores como facturas emitidas, ingresos facturados, clientes activos y cuentas
+    por cobrar. Son datos ficticios, pero ayudan a explicar el proposito del sistema.
+  </p>
+
+  <h3>3.5 Graficas simuladas</h3>
+  <p>
+    La grafica de barras se construye con elementos HTML y variables CSS como
+    <code>--bar-height</code>. La grafica circular usa <code>conic-gradient</code>. No hay una
+    librería externa de gráficas; todo es visual y estático.
+  </p>
+
+  <h3>3.6 Tabla de últimas facturas</h3>
+  <p>
+    El cuerpo de la tabla usa el identificador <code>invoiceTable</code>. Este contenedor se
+    llena desde <code>js/app.js</code> mediante JavaScript.
+  </p>
+
+  <h2 class="page-break">4. Módulo Facturas: <code>pages/facturas.html</code></h2>
+  <p>
+    El módulo de facturas permite simular la creación de una factura. Incluye formulario de
+    datos generales, seleccion de cliente, contrato, detalle de servicios, cálculo de totales
+    y una vista previa imprimible en tamaño carta.
+  </p>
+
+  <h3>4.1 Carga de estilos y scripts</h3>
+  <pre>&lt;link rel="stylesheet" href="../css/styles.css" /&gt;
+&lt;link rel="stylesheet" href="../css/modules.css" /&gt;
+&lt;link rel="stylesheet" href="../css/forms.css" /&gt;
+&lt;link rel="stylesheet" href="../css/tables.css" /&gt;
+...
+&lt;script src="../js/data.js"&gt;&lt;/script&gt;
+&lt;script src="../js/facturas.js"&gt;&lt;/script&gt;</pre>
+  <p>
+    Como la página esta dentro de la carpeta <code>pages</code>, las rutas usan
+    <code>../</code> para regresar a la raiz del proyecto. Primero se carga la base de datos
+    simulada y luego el controlador del módulo Facturas.
+  </p>
+
+  <h3>4.2 Formulario de datos de factura</h3>
+  <p>
+    El formulario contiene los campos principales: cliente, contrato, fecha de emisión,
+    fecha de vencimiento, tipo de factura, estado y observación. Estos campos permiten que
+    la vista previa tome datos actuales y se actualice visualmente.
+  </p>
+
+  <h3>4.3 Resumen de totales</h3>
+  <p>
+    El panel lateral muestra subtotal, IVA, descuento y total. Estos valores se actualizan
+    desde JavaScript cuando se agregan servicios al detalle de la factura.
+  </p>
+
+  <h3>4.4 Detalle de servicios</h3>
+  <pre>&lt;tbody id="invoiceDetailTable"&gt;&lt;/tbody&gt;</pre>
+  <p>
+    Este cuerpo de tabla es manipulado por <code>facturas.js</code>. Cada servicio agregado
+    genera una fila con código, nombre, cantidad, precio, IVA, total y una acción para eliminar.
+  </p>
+
+  <h3>4.5 Vista previa de factura impresa</h3>
+  <pre>&lt;article class="letter-page" id="letterPreview"&gt;
+  &lt;header class="letter-header"&gt;...&lt;/header&gt;
+  &lt;section class="letter-info-grid"&gt;...&lt;/section&gt;
+  &lt;table class="letter-table"&gt;...&lt;/table&gt;
+&lt;/article&gt;</pre>
+  <p>
+    Esta sección representa una hoja tamaño carta. Contiene encabezado, logo, número de factura,
+    cliente, datos del documento, detalle de servicios, observación y totales. El boton
+    <code>Imprimir</code> llama a <code>window.print()</code>.
+  </p>
+
+  <h2>5. Logica de Facturas: <code>js/facturas.js</code></h2>
+  <h3>5.1 Arreglo temporal de detalle</h3>
+  <pre>const invoiceItems = [];</pre>
+  <p>
+    Guarda en memoria los servicios agregados a la factura actual. No se guarda en base de
+    datos; al recargar la página se pierde la información agregada.
+  </p>
+
+  <h3>5.2 Objeto de referencias DOM</h3>
+  <pre>const elements = {
+  invoiceCode: document.querySelector("#invoiceCode"),
+  customerSelect: document.querySelector("#customerSelect"),
+  invoiceDetailTable: document.querySelector("#invoiceDetailTable")
+};</pre>
+  <p>
+    Centraliza las referencias a elementos HTML que JavaScript necesita manipular. Esto evita
+    repetir multiples consultas al DOM en diferentes funciones.
+  </p>
+
+  <h3>5.3 Creacion de celdas y estados</h3>
+  <p>
+    Las funciones <code>createCell</code> y <code>createStatusCell</code> construyen celdas
+    de tabla de manera dinamica. <code>createStatusCell</code> asigna clases como
+    <code>paid</code>, <code>pending</code> u <code>overdue</code> para colorear visualmente
+    el estado.
+  </p>
+
+  <h3>5.4 Llenado de selects</h3>
+  <p>
+    <code>fillSelect</code> recibe un select, una lista de datos y una funcion para formar
+    el texto de cada opción. Se usa para cargar clientes, contratos y servicios desde
+    <code>data.js</code>.
+  </p>
+
+  <h3>5.5 Calculo de totales</h3>
+  <p>
+    <code>updateTotals</code> recorre <code>invoiceItems</code> y suma subtotal, IVA,
+    descuento y total. Luego escribe esos resultados en las tarjetas y en la vista previa.
+  </p>
+
+  <h3>5.6 Agregar servicios</h3>
+  <p>
+    <code>addService</code> obtiene el servicio seleccionado, cantidad y descuento. Luego
+    usa <code>calcularTotalLinea</code>, funcion de <code>data.js</code>, para calcular
+    subtotal, IVA y total de la linea.
+  </p>
+
+  <h3>5.7 Renderizado de vista previa</h3>
+  <p>
+    <code>renderPrintPreview</code> toma los datos actuales del formulario y los coloca
+    dentro de la hoja carta. Esto permite que la factura impresa refleje cliente, fechas,
+    contrato, observación, servicios y totales.
+  </p>
+
+  <h2 class="page-break">6. Módulo Clientes: <code>pages/clientes.html</code></h2>
+  <p>
+    El módulo Clientes fue creado para resolver la página que estaba vacia. Ahora contiene
+    un CRUD simulado completo para administrar clientes dentro del navegador sin eliminar registros,
+    usando estado activo o inactivo.
+  </p>
+
+  <h3>6.1 Estructura general</h3>
+  <p>
+    La página conserva el mismo layout que el dashboard y facturas: sidebar, topbar,
+    <code>module-page</code>, tarjetas resumen, formulario principal, vista rapida y tabla.
+    Esto mantiene consistencia visual entre módulos.
+  </p>
+
+  <h3>6.2 Tarjetas resumen</h3>
+  <pre>&lt;strong id="totalClientsCard"&gt;0&lt;/strong&gt;
+&lt;strong id="activeClientsCard"&gt;0&lt;/strong&gt;
+&lt;strong id="newClientsCard"&gt;0&lt;/strong&gt;</pre>
+  <p>
+    Estas tarjetas muestran total de clientes, clientes activos y clientes nuevos del mes.
+    Los valores se calculan desde <code>clientes.js</code>.
+  </p>
+
+  <h3>6.3 Formulario de clientes</h3>
+  <p>
+    El formulario contiene campos para nombres, apellidos, teléfono, correo, departamento,
+    tipo de cliente, tipo de documento, número de documento, fecha, estado y dirección.
+    La fecha de registro se muestra como dato visible pero no editable. El boton para guardar
+    está ubicado debajo de la dirección para que la acción principal quede cerca del último
+    campo completado. El campo oculto <code>clientIdInput</code> permite distinguir entre crear
+    y editar.
+  </p>
+
+  <h3>6.4 Vista rápida</h3>
+  <p>
+    La vista rapida muestra una pequena ficha del cliente que se esta registrando o editando.
+    Se actualiza mientras el usuario escribe.
+  </p>
+
+  <h3>6.5 Tabla y filtros</h3>
+  <p>
+    La tabla <code>clientsTable</code> muestra los registros. El buscador filtra por nombre,
+    correo, teléfono, dirección, departamento, tipo de cliente y documento. El segúndo filtro
+    permite ver todos, solo activos o solo inactivos.
+  </p>
+
+  <h2>7. Logica de Clientes: <code>js/clientes.js</code></h2>
+  <h3>7.1 Objeto <code>clientElements</code></h3>
+  <p>
+    Agrupa referencias al formulario, campos, botones, tabla, filtros y tarjetas. Esto permite
+    que las funciones trabajen con elementos HTML ya identificados.
+  </p>
+
+  <h3>7.2 Normalizacion de datos</h3>
+  <pre>function ensureClientExtras() {
+  clientes.forEach((cliente) => {
+    if (!cliente.TipoCliente) {
+      cliente.TipoCliente = cliente.Apellidos ? "Natural" : "Juridico";
+    }
+  });
+}</pre>
+  <p>
+    Agrega propiedades visuales que no estaban en todos los clientes originales, como tipo de
+    cliente, tipo de documento y número de documento. Esto permite que la tabla tenga columnas
+    mas completas.
+  </p>
+
+  <h3>7.3 Crear cliente</h3>
+  <p>
+    Al enviar el formulario, <code>saveClient</code> llama a <code>getClientFromForm</code>.
+    Si el ID no existe, agrega el nuevo objeto al arreglo <code>clientes</code>. Si el ID existe,
+    actualiza el registro correspondiente.
+  </p>
+
+  <h3>7.4 Editar cliente</h3>
+  <p>
+    <code>editClient</code> busca el cliente por ID, llena el formulario con sus datos y cambia
+    el titulo a modo edición. Al guardar, se reemplaza el objeto original en el arreglo.
+  </p>
+
+  <h3>7.5 Activar e inactivar cliente</h3>
+  <p>
+    <code>toggleClientStatus</code> cambia el valor de <code>Estado</code> del cliente. En lugar
+    de eliminar el registro del arreglo, conserva el historial y permite marcarlo como activo o
+    inactivo según corresponda.
+  </p>
+
+  <h3>7.6 Búsqueda y filtros</h3>
+  <p>
+    <code>getFilteredClients</code> transforma varios campos del cliente en una cadena de texto
+    y compara contra lo escrito por el usuario. También valida el filtro de estado.
+  </p>
+
+  <h3>7.7 Renderizado de tabla</h3>
+  <p>
+    <code>renderClients</code> limpia y reconstruye el cuerpo de la tabla con los clientes
+    filtrados. También agrega botones de editar y cambiar estado para cada fila.
+  </p>
+
+  <h2 class="page-break">8. Estilos generales: <code>css/styles.css</code></h2>
+  <p>
+    Esta hoja contiene la base visual del sistema. Define variables CSS, layout principal,
+    sidebar, topbar, tarjetas, paneles, gráficas, tablas y estados.
+  </p>
+
+  <h3>8.1 Variables CSS</h3>
+  <pre>:root {
+  --bg: #f5f7fb;
+  --surface: #ffffff;
+  --sidebar: #121827;
+  --purple: #6d5dfc;
+}</pre>
+  <p>
+    Las variables permiten reutilizar colores y mantener coherencia visual. Si se cambia una
+    variable, todas las secciónes que la usan se actualizan.
+  </p>
+
+  <h3>8.2 Layout principal</h3>
+  <p>
+    <code>.app-shell</code> crea una distribucion de dos columnas: sidebar y contenido. En
+    pantallas pequenas, las media queries transforman el layout para que sea usable.
+  </p>
+
+  <h3>8.3 Sidebar y navegación</h3>
+  <p>
+    Las clases <code>.sidebar</code>, <code>.brand</code>, <code>.menu</code> y
+    <code>.menu-link</code> controlan la barra lateral, logo, enlaces e iconos del menu.
+  </p>
+
+  <h3>8.4 Tarjetas y paneles</h3>
+  <p>
+    <code>.metric-card</code>, <code>.panel</code>, <code>.action-card</code> y
+    <code>.table-panel</code> definen los contenedores principales. Incluyen bordes,
+    fondo blanco, sombra y separacion.
+  </p>
+
+  <h3>8.5 Estados visuales</h3>
+  <p>
+    Las clases <code>.status.paid</code>, <code>.status.pending</code>,
+    <code>.status.overdue</code> y <code>.status.neutral</code> dan color a estados como
+    pagada, pendiente, vencida o inactiva.
+  </p>
+
+  <h2>9. Estilos de módulos: <code>css/modules.css</code></h2>
+  <p>
+    Esta hoja fue usada para estilos compartidos entre Facturas y Clientes. También contiene
+    la configuración de la hoja imprimible de la factura.
+  </p>
+
+  <h3>9.1 Clases reutilizables de módulos</h3>
+  <p>
+    <code>.module-page</code> organiza los bloques verticalmente. <code>.module-header</code>
+    alinea titulo y acciónes. <code>.invoice-layout</code> crea una columna principal y un
+    panel lateral. <code>.summary-list</code> muestra pares de etiqueta y valor.
+  </p>
+
+  <h3>9.2 Vista previa carta</h3>
+  <p>
+    <code>.letter-page</code> simula una hoja tamaño carta. <code>.letter-header</code>,
+    <code>.letter-brand</code>, <code>.letter-info-grid</code>, <code>.letter-table</code>,
+    <code>.letter-bottom</code> y <code>.letter-footer</code> definen la estructura visual
+    de la factura impresa.
+  </p>
+
+  <h3>9.3 Logo de la factura</h3>
+  <p>
+    El logo se configura en <code>.letter-brand img</code>. Se ajusto el tamaño, alineacion
+    a la izquierda y uso de <code>object-fit: contain</code> para mantener la proporcion del
+    archivo <code>assets/logo.png</code>.
+  </p>
+
+  <h3>9.4 Configuración de impresión</h3>
+  <pre>@media print {
+  @page {
+    size: letter;
+    margin: 0;
+  }
+
+  body * {
+    visibility: hidden;
+  }
+
+  #letterPreview,
+  #letterPreview * {
+    visibility: visible;
+  }
+}</pre>
+  <p>
+    Este bloque oculta todo el sistema al imprimir y deja visible solamente la factura. Asi se
+    evita que Chrome imprima capturas del sistema, sidebar, formularios o multiples páginas.
+  </p>
+
+  <h2>10. Formularios y tablas: <code>css/forms.css</code> y <code>css/tables.css</code></h2>
+  <h3>10.1 Formularios</h3>
+  <p>
+    <code>forms.css</code> define <code>.form-grid</code> para formularios de dos columnas,
+    <code>.full-field</code> para campos que ocupan todo el ancho y <code>.line-form</code>
+    para formularios horizontales como agregar servicios o filtrar clientes.
+  </p>
+
+  <h3>10.2 Tablas</h3>
+  <p>
+    <code>tables.css</code> define <code>.table-actions</code> para agrupar botones de acción,
+    <code>.icon-button</code> para botones pequeños con iconos y <code>.muted-cell</code> para
+    mensajes cuando no hay datos.
+  </p>
+
+  <h2>11. Datos simulados: <code>js/data.js</code></h2>
+  <p>
+    Este archivo funciona como una base de datos falsa. Contiene arreglos como
+    <code>departamentos</code>, <code>clientes</code>, <code>usuarios</code>,
+    <code>servicios</code>, <code>contratos</code>, <code>facturas</code>,
+    <code>detalleFactura</code> y <code>pagos</code>.
+  </p>
+
+  <h3>11.1 Funciones auxiliares</h3>
+  <p>
+    Incluye funciones como <code>formatoMoneda</code>, <code>obtenerClientePorId</code>,
+    <code>obtenerNombreCliente</code>, <code>obtenerContratosPorCliente</code>,
+    <code>calcularTotalLinea</code>, <code>calcularTotalesFactura</code> y
+    <code>generarCódigoFactura</code>. Estas funciones evitan repetir lógica en los módulos.
+  </p>
+
+  <h2>12. Limitaciones del proyecto</h2>
+  <ul>
+    <li>No existe conexión real a una base de datos.</li>
+    <li>Los registros creados, editados o cambiados de estado se pierden al recargar la página.</li>
+    <li>Los botones de guardar borrador o emitir factura son visuales, no realizan persistencia.</li>
+    <li>La autenticación y permisos de usuario son simulados.</li>
+    <li>El objetivo principal es demostrar interfaz, flujo y estructura para una defensa universitaria.</li>
+  </ul>
+
+  <h2>13. Conclusiones</h2>
+  <p>
+    El proyecto SoftFactur quedo como una maqueta funcional de un sistema administrativo de
+    facturación. Las partes trabajadas permiten demostrar navegación, dashboard, gestión de
+    clientes, creación de factura, cálculos automáticos, detalle de servicios, vista previa en
+    formato carta e impresión controlada. Aunque no posee backend, la estructura de archivos y
+    la separacion entre HTML, CSS y JavaScript facilitan explicar el funcionamiento durante una
+    presentación academica.
+  </p>
+
+  <p class="note">
+    Nota: el CRUD y la factura son simulados en frontend. Para convertirlo en un sistema real
+    se debería agregar backend, base de datos, validaciónes de servidor y persistencia.
+  </p>
+</body>
+</html>
+
+

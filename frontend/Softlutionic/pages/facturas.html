@@ -1,0 +1,436 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta
+    name="description"
+    content="Módulo de facturación de SoftFactur para crear facturas de servicios."
+  />
+  <title>SoftFactur | Nueva Factura</title>
+
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com" />
+  <link rel="stylesheet" href="../css/styles.css" />
+  <link rel="stylesheet" href="../css/modules.css" />
+  <link rel="stylesheet" href="../css/forms.css" />
+  <link rel="stylesheet" href="../css/tables.css" />
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+  />
+</head>
+
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" aria-label="Navegación principal">
+      <a class="brand" href="../index.html" aria-label="Ir al dashboard">
+        <img src="../assets/logo.png" alt="" />
+        <span>SoftFactur</span>
+      </a>
+
+      <nav class="menu">
+        <h2 class="menu-title">Gestión</h2>
+
+        <a class="menu-link" href="../index.html">
+          <i class="fa-solid fa-chart-line" aria-hidden="true"></i>
+          <span>Dashboard</span>
+        </a>
+        <a class="menu-link active" href="facturas.html" aria-current="page">
+          <i class="fa-solid fa-file-invoice" aria-hidden="true"></i>
+          <span>Facturas</span>
+        </a>
+        <a class="menu-link" href="clientes.html">
+          <i class="fa-solid fa-users" aria-hidden="true"></i>
+          <span>Clientes</span>
+        </a>
+        <a class="menu-link" href="servicios.html">
+          <i class="fa-solid fa-screwdriver-wrench" aria-hidden="true"></i>
+          <span>Servicios</span>
+        </a>
+        <a class="menu-link" href="pagos.html">
+          <i class="fa-solid fa-credit-card" aria-hidden="true"></i>
+          <span>Pagos</span>
+        </a>
+        <a class="menu-link" href="moras.html">
+          <i class="fa-solid fa-calendar-xmark" aria-hidden="true"></i>
+          <span>Moras</span>
+        </a>
+        <a class="menu-link" href="reportes.html">
+          <i class="fa-solid fa-chart-pie" aria-hidden="true"></i>
+          <span>Reportes</span>
+        </a>
+
+        <h2 class="menu-title">Administración</h2>
+
+        <a class="menu-link" href="usuarios.html">
+          <i class="fa-solid fa-user-gear" aria-hidden="true"></i>
+          <span>Usuarios</span>
+        </a>
+        <a class="menu-link" href="configuracion.html">
+          <i class="fa-solid fa-gear" aria-hidden="true"></i>
+          <span>Configuración</span>
+        </a>
+      </nav>
+
+      <section class="user-box" aria-label="Sesión actual">
+        <small>Sesión activa</small>
+        <strong>Administrador</strong>
+      </section>
+    </aside>
+
+    <main class="main-content">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">Sistema de Facturación</p>
+          <h1>Nueva Factura</h1>
+        </div>
+
+        <div class="topbar-actions" aria-label="Acciones rápidas">
+          <a href="reportes.html">Resumen</a>
+          <a href="#">Documentacion</a>
+          <button type="button" aria-label="Mensajes">
+            <i class="fa-solid fa-envelope" aria-hidden="true"></i>
+          </button>
+          <button type="button" aria-label="Notificaciones">
+            <i class="fa-solid fa-bell" aria-hidden="true"></i>
+          </button>
+          <button type="button" aria-label="Perfil de usuario">
+            <i class="fa-solid fa-user" aria-hidden="true"></i>
+          </button>
+        </div>
+      </header>
+
+      <section class="module-page" aria-labelledby="invoice-title">
+        <div class="module-header">
+          <div>
+            <h2 id="invoice-title">Crear factura de servicio</h2>
+            <p>Registro visual para simular emisión, detalle, impuestos y estado de cobro.</p>
+          </div>
+
+          <div class="module-actions">
+            <button class="button-link secondary" type="button" id="saveDraftButton">
+              <i class="fa-solid fa-floppy-disk" aria-hidden="true"></i>
+              Guardar borrador
+            </button>
+            <button class="button-link" type="button" id="issueInvoiceButton">
+              <i class="fa-solid fa-file-circle-plus" aria-hidden="true"></i>
+              Agregar factura
+            </button>
+          </div>
+        </div>
+
+        <section class="metrics-grid compact" aria-label="Resumen de facturación">
+          <article class="metric-card purple">
+            <div>
+              <h3>Número sugerido</h3>
+              <strong id="invoiceCode">FAC-000004</strong>
+              <p>Generado automáticamente</p>
+            </div>
+            <i class="fa-solid fa-hashtag" aria-hidden="true"></i>
+          </article>
+
+          <article class="metric-card teal">
+            <div>
+              <h3>Cliente seleccionado</h3>
+              <strong id="selectedCustomer">Carlos Alberto</strong>
+              <p>Contrato activo disponible</p>
+            </div>
+            <i class="fa-solid fa-user-check" aria-hidden="true"></i>
+          </article>
+
+          <article class="metric-card orange">
+            <div>
+              <h3>Total estimado</h3>
+              <strong id="totalCard">C$ 0.00</strong>
+              <p>Calculado según servicios</p>
+            </div>
+            <i class="fa-solid fa-calculator" aria-hidden="true"></i>
+          </article>
+        </section>
+
+        <section class="invoice-layout">
+          <article class="panel">
+            <div class="panel-header">
+              <div>
+                <h2>Datos de la factura</h2>
+                <p>Información principal del documento</p>
+              </div>
+            </div>
+
+            <form class="form-grid" aria-label="Formulario de nueva factura">
+              <label>
+                <span>Cliente</span>
+                <select id="customerSelect" name="cliente"></select>
+              </label>
+
+              <label>
+                <span>Tipo de contrato</span>
+                <select id="contractSelect" name="contrato"></select>
+              </label>
+
+              <label>
+                <span>Fecha de emisión</span>
+                <input id="issueDateInput" type="date" name="fechaEmision" value="2026-04-29" />
+              </label>
+
+              <label>
+                <span>Fecha de vencimiento</span>
+                <input id="dueDateInput" type="date" name="fechaVencimiento" value="2026-05-14" disabled />
+              </label>
+
+              <label>
+                <span>Tipo de factura</span>
+                <select name="tipoFactura">
+                  <option>Contado</option>
+                  <option selected>Crédito</option>
+                  <option>Servicio único</option>
+                </select>
+              </label>
+
+              <label>
+                <span>Estado</span>
+                <select id="statusSelect" name="estado">
+                  <option selected>Pendiente</option>
+                  <option>Pagada</option>
+                  <option>Anulada</option>
+                </select>
+              </label>
+
+              <label class="full-field">
+                <span>Observación</span>
+                <textarea id="observationInput" name="observacion" rows="3">Factura generada como demostración para defensa universitaria.</textarea>
+              </label>
+            </form>
+          </article>
+
+          <aside class="panel summary-panel" aria-label="Resumen de totales">
+            <div class="panel-header">
+              <div>
+                <h2>Totales</h2>
+                <p>Vista preliminar</p>
+              </div>
+            </div>
+
+            <dl class="summary-list">
+              <div>
+                <dt>Subtotal</dt>
+                <dd id="subtotalValue">C$ 0.00</dd>
+              </div>
+              <div>
+                <dt>IVA 15%</dt>
+                <dd id="ivaValue">C$ 0.00</dd>
+              </div>
+              <div>
+                <dt>Descuento</dt>
+                <dd id="discountValue">C$ 0.00</dd>
+              </div>
+              <div class="summary-total">
+                <dt>Total a pagar</dt>
+                <dd id="totalValue">C$ 0.00</dd>
+              </div>
+            </dl>
+
+            <button class="button-link full-button" type="button" id="previewButton">
+              <i class="fa-solid fa-print" aria-hidden="true"></i>
+              Vista previa
+            </button>
+          </aside>
+        </section>
+
+        <section class="table-panel" aria-labelledby="detail-title">
+          <div class="panel-header">
+            <div>
+              <h2 id="detail-title">Detalle de servicios</h2>
+              <p>Agrega servicios ficticios al documento</p>
+            </div>
+          </div>
+
+          <form class="line-form" aria-label="Agregar servicio a la factura">
+            <label>
+              <span>Servicio</span>
+              <select id="serviceSelect" name="servicio"></select>
+            </label>
+
+            <label>
+              <span>Cantidad</span>
+              <input id="quantityInput" type="number" min="1" value="1" />
+            </label>
+
+            <label>
+              <span>Descuento</span>
+              <input id="discountInput" type="number" min="0" value="0" disabled />
+            </label>
+
+            <button class="button-link" type="button" id="addServiceButton">
+              <i class="fa-solid fa-plus" aria-hidden="true"></i>
+              Agregar servicio
+            </button>
+          </form>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th scope="col">Código</th>
+                  <th scope="col">Servicio</th>
+                  <th scope="col">Cantidad</th>
+                  <th scope="col">Precio</th>
+                  <th scope="col">IVA</th>
+                  <th scope="col">Total</th>
+                  <th scope="col">Acción</th>
+                </tr>
+              </thead>
+              <tbody id="invoiceDetailTable"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="print-preview-section is-hidden" id="printPreviewSection" aria-labelledby="print-preview-title">
+          <div class="panel-header print-preview-toolbar">
+            <div>
+              <h2 id="print-preview-title">Vista previa carta</h2>
+              <p>Formato visual de factura para impresión o presentación.</p>
+            </div>
+
+            <button class="button-link secondary" type="button" id="printButton">
+              <i class="fa-solid fa-print" aria-hidden="true"></i>
+              Imprimir
+            </button>
+          </div>
+
+          <article class="letter-page" id="letterPreview" aria-label="Factura en tamaño carta">
+            <header class="letter-header">
+              <div class="letter-brand">
+                <img src="../assets/logo.png" alt="" />
+                <div>
+                  <strong>SoftFactur</strong>
+                  <span>Sistema de Facturación</span>
+                </div>
+              </div>
+
+              <div class="letter-invoice-meta">
+                <p>Factura</p>
+                <strong id="previewInvoiceCode">FAC-000004</strong>
+                <span id="previewStatus">Pendiente</span>
+              </div>
+            </header>
+
+            <section class="letter-info-grid">
+              <div>
+                <h3>Facturar a</h3>
+                <p id="previewCustomer">Carlos Alberto Mendoza Lopez</p>
+                <span id="previewCustomerEmail">carlos.mendoza@example.com</span>
+                <span id="previewCustomerAddress">Managua, Villa Fontana</span>
+              </div>
+
+              <div>
+                <h3>Datos del documento</h3>
+                <dl>
+                  <div>
+                    <dt>Emision</dt>
+                    <dd id="previewIssueDate">2026-04-29</dd>
+                  </div>
+                  <div>
+                    <dt>Vencimiento</dt>
+                    <dd id="previewDueDate">2026-05-14</dd>
+                  </div>
+                  <div>
+                    <dt>Contrato</dt>
+                    <dd id="previewContract">CONT-001</dd>
+                  </div>
+                </dl>
+              </div>
+            </section>
+
+            <table class="letter-table">
+              <thead>
+                <tr>
+                  <th scope="col">Código</th>
+                  <th scope="col">Descripción</th>
+                  <th scope="col">Cant.</th>
+                  <th scope="col">Precio</th>
+                  <th scope="col">IVA</th>
+                  <th scope="col">Total</th>
+                </tr>
+              </thead>
+              <tbody id="previewItemsTable"></tbody>
+            </table>
+
+            <section class="letter-bottom">
+              <div class="letter-notes">
+                <h3>Observación</h3>
+                <p id="previewObservation">Factura generada como demostración para defensa universitaria.</p>
+              </div>
+
+              <dl class="letter-totals">
+                <div>
+                  <dt>Subtotal</dt>
+                  <dd id="previewSubtotal">C$ 0.00</dd>
+                </div>
+                <div>
+                  <dt>IVA</dt>
+                  <dd id="previewIva">C$ 0.00</dd>
+                </div>
+                <div>
+                  <dt>Descuento</dt>
+                  <dd id="previewDiscount">C$ 0.00</dd>
+                </div>
+                <div class="letter-total">
+                  <dt>Total</dt>
+                  <dd id="previewTotal">C$ 0.00</dd>
+                </div>
+              </dl>
+            </section>
+
+            <footer class="letter-footer">
+              <span>Gracias por confiar en SoftFactur.</span>
+              <span>Documento generado para fines académicos.</span>
+            </footer>
+          </article>
+        </section>
+
+        <section class="table-panel" aria-labelledby="history-title">
+          <div class="panel-header">
+            <div>
+              <h2 id="history-title">Facturas recientes</h2>
+              <p>Documentos registrados en SQL Server según su estado de pago</p>
+            </div>
+
+            <label class="history-filter">
+              <span>Estado</span>
+              <select id="invoiceStatusFilter" name="invoiceStatusFilter">
+                <option selected>Todas</option>
+                <option>Pendiente</option>
+                <option>Pagada</option>
+                <option>Vencida</option>
+              </select>
+            </label>
+          </div>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th scope="col">Factura</th>
+                  <th scope="col">Cliente</th>
+                  <th scope="col">Fecha</th>
+                  <th scope="col">Vencimiento</th>
+                  <th scope="col">Monto</th>
+                  <th scope="col">Estado</th>
+                  <th scope="col">Acción</th>
+                </tr>
+              </thead>
+              <tbody id="invoiceHistoryTable"></tbody>
+            </table>
+          </div>
+        </section>
+      </section>
+    </main>
+  </div>
+
+  <script src="../js/auth.js?v=20260618-admin-menu-display"></script>
+  <script src="../js/facturas.js?v=estado-backend-facturas-20260614"></script>
+</body>
+</html>
+
+

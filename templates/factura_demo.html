@@ -1,0 +1,94 @@
+{% load static %}
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>SoftFactur | Generacion de factura</title>
+    <link rel="stylesheet" href="{% static 'factura-demo.css' %}">
+    <script src="{% static 'factura-demo.js' %}" defer></script>
+</head>
+<body>
+    <header class="topbar">
+        <div>
+            <p class="eyebrow">SoftFactur</p>
+            <h1>Generacion de factura</h1>
+        </div>
+        <div class="api-status" id="apiStatus">Conectando con la API...</div>
+    </header>
+
+    <main class="workspace">
+        <section class="panel controls-panel" aria-labelledby="formTitle">
+            <div class="section-title">
+                <h2 id="formTitle">Nueva factura</h2>
+                <span id="nextCode">Codigo pendiente</span>
+            </div>
+
+            <form id="invoiceForm">
+                <label>
+                    Usuario emisor
+                    <select id="usuarioSelect" required></select>
+                </label>
+
+                <label>
+                    Contrato activo
+                    <select id="contratoSelect" required></select>
+                </label>
+
+                <div class="date-grid">
+                    <label>
+                        Emision
+                        <input id="fechaEmision" type="datetime-local" required>
+                    </label>
+                    <label>
+                        Vencimiento
+                        <input id="fechaVencimiento" type="datetime-local" required>
+                    </label>
+                </div>
+
+                <div class="section-title compact">
+                    <h2>Servicios</h2>
+                    <span id="serviceCount">0 seleccionados</span>
+                </div>
+                <div class="services-table-wrap">
+                    <table class="services-table">
+                        <thead>
+                            <tr>
+                                <th>Usar</th>
+                                <th>Servicio</th>
+                                <th>Precio</th>
+                                <th>Cant.</th>
+                            </tr>
+                        </thead>
+                        <tbody id="serviciosBody">
+                            <tr>
+                                <td colspan="4">Cargando servicios...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="actions">
+                    <button class="primary" type="submit">Generar factura</button>
+                    <button class="secondary" id="resetButton" type="button">Limpiar</button>
+                </div>
+            </form>
+
+            <p class="message" id="message" role="status"></p>
+        </section>
+
+        <section class="panel invoice-panel" aria-labelledby="invoiceTitle">
+            <div class="section-title no-print">
+                <h2 id="invoiceTitle">Comprobante</h2>
+                <button class="secondary" id="printButton" type="button" disabled>Imprimir</button>
+            </div>
+
+            <article class="invoice" id="invoicePreview">
+                <div class="invoice-empty">
+                    Genera una factura para ver el comprobante listo para imprimir.
+                </div>
+            </article>
+        </section>
+    </main>
+</body>
+</html>

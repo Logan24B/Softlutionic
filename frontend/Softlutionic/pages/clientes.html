@@ -1,0 +1,301 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta
+    name="description"
+    content="Módulo de clientes de SoftFactur para registrar, consultar y administrar clientes."
+  />
+  <title>SoftFactur | Clientes</title>
+
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com" />
+  <link rel="stylesheet" href="../css/styles.css" />
+  <link rel="stylesheet" href="../css/modules.css" />
+  <link rel="stylesheet" href="../css/forms.css" />
+  <link rel="stylesheet" href="../css/tables.css" />
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+  />
+</head>
+
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" aria-label="Navegación principal">
+      <a class="brand" href="../index.html" aria-label="Ir al dashboard">
+        <img src="../assets/logo.png" alt="" />
+        <span>SoftFactur</span>
+      </a>
+
+      <nav class="menu">
+        <h2 class="menu-title">Gestión</h2>
+
+        <a class="menu-link" href="../index.html">
+          <i class="fa-solid fa-chart-line" aria-hidden="true"></i>
+          <span>Dashboard</span>
+        </a>
+        <a class="menu-link" href="facturas.html">
+          <i class="fa-solid fa-file-invoice" aria-hidden="true"></i>
+          <span>Facturas</span>
+        </a>
+        <a class="menu-link active" href="clientes.html" aria-current="page">
+          <i class="fa-solid fa-users" aria-hidden="true"></i>
+          <span>Clientes</span>
+        </a>
+        <a class="menu-link" href="servicios.html">
+          <i class="fa-solid fa-screwdriver-wrench" aria-hidden="true"></i>
+          <span>Servicios</span>
+        </a>
+        <a class="menu-link" href="pagos.html">
+          <i class="fa-solid fa-credit-card" aria-hidden="true"></i>
+          <span>Pagos</span>
+        </a>
+        <a class="menu-link" href="moras.html">
+          <i class="fa-solid fa-calendar-xmark" aria-hidden="true"></i>
+          <span>Moras</span>
+        </a>
+        <a class="menu-link" href="reportes.html">
+          <i class="fa-solid fa-chart-pie" aria-hidden="true"></i>
+          <span>Reportes</span>
+        </a>
+
+        <h2 class="menu-title">Administración</h2>
+
+        <a class="menu-link" href="usuarios.html">
+          <i class="fa-solid fa-user-gear" aria-hidden="true"></i>
+          <span>Usuarios</span>
+        </a>
+        <a class="menu-link" href="configuracion.html">
+          <i class="fa-solid fa-gear" aria-hidden="true"></i>
+          <span>Configuración</span>
+        </a>
+      </nav>
+
+      <section class="user-box" aria-label="Sesión actual">
+        <small>Sesión activa</small>
+        <strong>Administrador</strong>
+      </section>
+    </aside>
+
+    <main class="main-content">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">Sistema de Facturación</p>
+          <h1>Clientes</h1>
+        </div>
+
+        <div class="topbar-actions" aria-label="Acciones rápidas">
+          <a href="facturas.html">Nueva factura</a>
+          <a href="reportes.html">Reportes</a>
+          <button type="button" aria-label="Mensajes">
+            <i class="fa-solid fa-envelope" aria-hidden="true"></i>
+          </button>
+          <button type="button" aria-label="Notificaciones">
+            <i class="fa-solid fa-bell" aria-hidden="true"></i>
+          </button>
+          <button type="button" aria-label="Perfil de usuario">
+            <i class="fa-solid fa-user" aria-hidden="true"></i>
+          </button>
+        </div>
+      </header>
+
+      <section class="module-page" aria-labelledby="clients-title">
+        <div class="module-header">
+          <div>
+            <h2 id="clients-title">Gestión de clientes</h2>
+            <p>CRUD conectado a la base de datos para registrar, editar, buscar, activar e inactivar clientes.</p>
+          </div>
+
+          <div class="module-actions">
+            <button class="button-link secondary" type="button" id="clearClientButton">
+              <i class="fa-solid fa-rotate-left" aria-hidden="true"></i>
+              Limpiar
+            </button>
+          </div>
+        </div>
+
+        <section class="metrics-grid compact" aria-label="Resumen de clientes">
+          <article class="metric-card purple">
+            <div>
+              <h3>Total clientes</h3>
+              <strong id="totalClientsCard">0</strong>
+              <p>Registros en BD</p>
+            </div>
+            <i class="fa-solid fa-users" aria-hidden="true"></i>
+          </article>
+
+          <article class="metric-card teal">
+            <div>
+              <h3>Clientes activos</h3>
+              <strong id="activeClientsCard">0</strong>
+              <p>Disponibles para facturar</p>
+            </div>
+            <i class="fa-solid fa-user-check" aria-hidden="true"></i>
+          </article>
+
+          <article class="metric-card orange">
+            <div>
+              <h3>Nuevos este mes</h3>
+              <strong id="newClientsCard">0</strong>
+              <p>Altas recientes</p>
+            </div>
+            <i class="fa-solid fa-calendar-plus" aria-hidden="true"></i>
+          </article>
+        </section>
+
+        <section class="invoice-layout">
+          <article class="panel">
+            <div class="panel-header">
+              <div>
+                <h2 id="formTitle">Nuevo cliente</h2>
+                <p>Datos generales del cliente</p>
+              </div>
+            </div>
+
+            <form class="form-grid" id="clientForm" aria-label="Formulario de clientes">
+              <input type="hidden" id="clientIdInput" />
+
+              <label>
+                <span>Nombres</span>
+                <input id="namesInput" type="text" required placeholder="Juan Carlos" />
+              </label>
+
+              <label>
+                <span>Apellidos</span>
+                <input id="lastNamesInput" type="text" placeholder="Perez Lopez" />
+              </label>
+
+              <label>
+                <span>Teléfono</span>
+                <input id="phoneInput" type="tel" required placeholder="+505 0000 0000" pattern="^\+505 [0-9]{4} [0-9]{4}$" />
+              </label>
+
+              <label>
+                <span>Correo</span>
+                <input id="emailInput" type="email" required placeholder="cliente@correo.com" />
+              </label>
+
+              <label>
+                <span>Departamento</span>
+                <select id="departmentInput" required></select>
+              </label>
+
+              <label>
+                <span>Cédula</span>
+                <input id="documentNumberInput" type="text" required placeholder="001-000000-0000A" />
+              </label>
+
+              <label>
+                <span>Fecha de registro</span>
+                <input id="dateInput" type="text" disabled value="Asignada por el servidor" />
+              </label>
+
+              <label>
+                <span>Hora de registro</span>
+                <input id="timeInput" type="text" disabled value="Asignada por el servidor" />
+              </label>
+
+              <label>
+                <span>Estado</span>
+                <select id="statusInput">
+                  <option value="true">Activo</option>
+                  <option value="false">Inactivo</option>
+                </select>
+              </label>
+
+              <label class="full-field">
+                <span>Dirección</span>
+                <textarea id="addressInput" required rows="3" placeholder="Ciudad Sandino, Managua"></textarea>
+              </label>
+
+              <div class="form-actions">
+                <button class="button-link" type="submit">
+                  <i class="fa-solid fa-user-plus" aria-hidden="true"></i>
+                  Guardar cliente
+                </button>
+              </div>
+            </form>
+          </article>
+
+          <aside class="panel summary-panel" aria-label="Cliente seleccionado">
+            <div class="panel-header">
+              <div>
+                <h2>Vista rápida</h2>
+                <p>Registro seleccionado</p>
+              </div>
+            </div>
+
+            <dl class="summary-list">
+              <div>
+                <dt>Cliente</dt>
+                <dd id="previewClientName">Sin seleccionar</dd>
+              </div>
+              <div>
+                <dt>Correo</dt>
+                <dd id="previewClientEmail">Sin correo</dd>
+              </div>
+              <div>
+                <dt>Teléfono</dt>
+                <dd id="previewClientPhone">Sin teléfono</dd>
+              </div>
+              <div class="summary-total">
+                <dt>Estado</dt>
+                <dd id="previewClientStatus">Activo</dd>
+              </div>
+            </dl>
+          </aside>
+        </section>
+
+        <section class="table-panel" aria-labelledby="clients-table-title">
+          <div class="panel-header">
+            <div>
+              <h2 id="clients-table-title">Listado de clientes</h2>
+              <p>Búsqueda, edición y control de estado</p>
+            </div>
+          </div>
+
+          <form class="line-form client-filters" aria-label="Filtros de clientes">
+            <label>
+              <span>Buscar</span>
+              <input id="clientSearchInput" type="search" placeholder="Nombre, correo, teléfono o documento" />
+            </label>
+
+            <label>
+              <span>Estado</span>
+              <select id="clientStatusFilter">
+                <option value="all">Todos</option>
+                <option value="active">Activos</option>
+                <option value="inactive">Inactivos</option>
+              </select>
+            </label>
+          </form>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th scope="col">N°</th>
+                  <th scope="col">Cliente</th>
+                  <th scope="col">Teléfono</th>
+                  <th scope="col">Correo</th>
+                  <th scope="col">Departamento</th>
+                  <th scope="col">Documento</th>
+                  <th scope="col">Estado</th>
+                  <th scope="col">Acciones</th>
+                </tr>
+              </thead>
+              <tbody id="clientsTable"></tbody>
+            </table>
+          </div>
+        </section>
+      </section>
+    </main>
+  </div>
+
+  <script src="../js/auth.js?v=20260618-admin-menu-display"></script>
+  <script src="../js/clientes.js?v=api-origin-fix-20260613"></script>
+</body>
+</html>
+
+

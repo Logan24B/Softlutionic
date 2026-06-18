@@ -377,3 +377,6 @@ poesía.toml
 pyrightconfig.json
 
 # Fin de https://www.toptal.com/developers/gitignore/api/django,python,pycharm
+
+# SoftFactur local runtime logs
+*.log

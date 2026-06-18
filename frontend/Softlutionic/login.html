@@ -1,0 +1,128 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Acceso seguro al sistema administrativo SoftFactur." />
+  <title>SoftFactur | Iniciar sesión</title>
+
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com" />
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="css/login.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+
+<body class="login-page">
+  <main class="login-shell" aria-labelledby="login-title">
+    <section class="login-brand" aria-label="SoftFactur">
+      <a class="brand login-logo" href="login.html" aria-label="SoftFactur">
+        <img src="assets/logo.png" alt="" />
+        <span>Softlutionic</span>
+      </a>
+
+      <div class="login-copy">
+        <p class="eyebrow">Sistema de Facturación</p>
+        <h1 id="login-title">Acceso seguro</h1>
+        <p>Control de facturas, clientes, pagos y usuarios con credenciales protegidas.</p>
+      </div>
+
+      <dl class="security-list">
+        <div>
+          <dt><i class="fa-solid fa-lock" aria-hidden="true"></i> Sesión privada</dt>
+          <!-- <dd>El panel solo carga después de validar usuario y contraseña.</dd> -->
+        </div>
+        <div>
+          <dt><i class="fa-solid fa-key" aria-hidden="true"></i> Recuperación por correo</dt>
+          <!-- <dd>El enlace permite crear una nueva contraseña sin exponer la anterior.</dd> -->
+        </div>
+        <div>
+          <dt><i class="fa-solid fa-shield-halved" aria-hidden="true"></i> Validación Django</dt>
+          <!-- <dd>Las contraseñas nuevas pasan por las reglas de seguridad del backend.</dd> -->
+        </div>
+      </dl>
+    </section>
+
+    <section class="login-panel" aria-label="Formulario de acceso">
+      <form class="auth-form active" id="loginForm">
+        <div class="form-heading">
+          <h2>Iniciar sesión</h2>
+          <p>Ingrese sus credenciales para abrir el sistema.</p>
+        </div>
+
+        <label>
+          <span>Usuario o correo</span>
+          <input id="loginUser" name="usuario" type="text" autocomplete="username" required />
+        </label>
+
+        <label>
+          <span>Contraseña</span>
+          <div class="password-field">
+            <input id="loginPassword" name="contrasena" type="password" autocomplete="current-password" required />
+            <button class="icon-button" type="button" data-toggle-password="loginPassword" aria-label="Mostrar contraseña">
+              <i class="fa-solid fa-eye" aria-hidden="true"></i>
+            </button>
+          </div>
+        </label>
+
+        <button class="button-link auth-submit" type="submit">
+          <i class="fa-solid fa-right-to-bracket" aria-hidden="true"></i>
+          Entrar
+        </button>
+
+        <button class="text-button" type="button" data-auth-view="recover">Olvidé mi contraseña</button>
+      </form>
+
+      <form class="auth-form" id="recoverForm">
+        <div class="form-heading">
+          <h2>Recuperar contraseña</h2>
+          <p>Enviaremos un enlace al correo registrado del usuario.</p>
+        </div>
+
+        <label>
+          <span>Correo electrónico</span>
+          <input id="recoverEmail" name="email" type="email" autocomplete="email" required />
+        </label>
+
+        <button class="button-link auth-submit" type="submit">
+          <i class="fa-solid fa-envelope-circle-check" aria-hidden="true"></i>
+          Enviar enlace
+        </button>
+
+        <button class="text-button" type="button" data-auth-view="login">Volver al inicio de sesión</button>
+      </form>
+
+      <form class="auth-form" id="resetForm">
+        <div class="form-heading">
+          <h2>Nueva contraseña</h2>
+          <p>Defina una contraseña segura para reactivar el acceso.</p>
+        </div>
+
+        <label>
+          <span>Nueva contraseña</span>
+          <div class="password-field">
+            <input id="resetPassword" name="nueva_contrasena" type="password" autocomplete="new-password" required />
+            <button class="icon-button" type="button" data-toggle-password="resetPassword" aria-label="Mostrar contraseña">
+              <i class="fa-solid fa-eye" aria-hidden="true"></i>
+            </button>
+          </div>
+        </label>
+
+        <label>
+          <span>Confirmar contraseña</span>
+          <input id="resetPasswordConfirm" type="password" autocomplete="new-password" required />
+        </label>
+
+        <button class="button-link auth-submit" type="submit">
+          <i class="fa-solid fa-check" aria-hidden="true"></i>
+          Actualizar contraseña
+        </button>
+      </form>
+
+      <p class="auth-message" id="authMessage" role="status" aria-live="polite"></p>
+    </section>
+  </main>
+
+  <script src="js/login.js?v=20260617-session-host"></script>
+</body>
+</html>
+

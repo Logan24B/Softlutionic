@@ -10,14 +10,15 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
+import os
 from pathlib import Path
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
 from apps.catalogos.setting_apps import CATALOGOS_SETTING_APPS
 from apps.seguridad.setting_apps import SEGURIDAD_SETTING_APPS
 from apps.transaccion.setting_apps import TRANSACCION_SETTING_APPS
 
+
+BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
@@ -33,20 +34,26 @@ ALLOWED_HOSTS = []
 
 # Application definition
 
-INSTALLED_APPS = [
+DJANGO_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+]
 
-    # Django REST Framework
+THIRD_PARTY_APPS = [
     'rest_framework',
-] + SEGURIDAD_SETTING_APPS + CATALOGOS_SETTING_APPS + TRANSACCION_SETTING_APPS
+]
+
+LOCAL_APPS = SEGURIDAD_SETTING_APPS + CATALOGOS_SETTING_APPS + TRANSACCION_SETTING_APPS
+
+INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
 
 MIDDLEWARE = [
+    'SoftFactur.cors.DevCorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -61,7 +68,7 @@ ROOT_URLCONF = 'SoftFactur.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -88,13 +95,14 @@ WSGI_APPLICATION = 'SoftFactur.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'mssql',  # Utilizamos el backend mssql-django
-        'NAME': 'Pindy',  # Nombre de la base de datos
-        'HOST': 'DESKTOP-M27HGA0\\SQLEXPRESS',  # IP del servidor SQL Server
+        'ENGINE': 'SoftFactur.db.backends.mssql_no_mars',  # Backend mssql-django sin MARS para este SQL Server local
+        'NAME': 'BDsofactur',  # Nombre de la base de datos
+        'HOST': 'localhost',  # SQL Server Express por TCP
+        'PORT': '1433',
         'OPTIONS': {
-            'driver': 'ODBC Driver 17 for SQL Server',  # Driver ODBC instalado
+            'driver': 'ODBC Driver 18 for SQL Server',  # Driver ODBC instalado
             'trusted_connection': 'yes',  # Habilita la autenticación de Windows
-            'extra_params': 'TrustServerCertificate=yes',  # Útil si estás usando SSL sin un certificado de confianza
+            'extra_params': 'TrustServerCertificate=yes;Encrypt=no',  # Desarrollo local con SQL Server Express
         },
     }
 }
@@ -126,7 +134,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'America/Managua'
 
 USE_I18N = True
 
@@ -137,6 +145,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = 'static/'
+STATICFILES_DIRS = [
+    BASE_DIR / 'static',
+]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
@@ -144,3 +155,29 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'usuarios.user'
+
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ],
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+    ],
+}
+
+SOFTFACTUR_EMAIL = 'loganblandon044@gmail.com'
+
+EMAIL_BACKEND = os.environ.get(
+    'SOFTFACTUR_EMAIL_BACKEND',
+    'django.core.mail.backends.smtp.EmailBackend',
+)
+EMAIL_HOST = os.environ.get('SOFTFACTUR_EMAIL_HOST', 'smtp.gmail.com')
+EMAIL_PORT = int(os.environ.get('SOFTFACTUR_EMAIL_PORT', '587'))
+EMAIL_USE_TLS = os.environ.get('SOFTFACTUR_EMAIL_USE_TLS', 'true').lower() == 'true'
+EMAIL_HOST_USER = os.environ.get('SOFTFACTUR_EMAIL_USER', SOFTFACTUR_EMAIL)
+EMAIL_HOST_PASSWORD = os.environ.get('SOFTFACTUR_EMAIL_PASSWORD', '')
+EMAIL_TIMEOUT = int(os.environ.get('SOFTFACTUR_EMAIL_TIMEOUT', '20'))
+DEFAULT_FROM_EMAIL = f'SoftFactur <{EMAIL_HOST_USER}>'
+SERVER_EMAIL = EMAIL_HOST_USER
+LOGIN_URL = '/frontend/Softlutionic/login.html'
