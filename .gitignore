@@ -380,3 +380,6 @@ pyrightconfig.json
 
 # SoftFactur local runtime logs
 *.log
+
+# Guias de presentacion en formato Office (no versionar binarios)
+Guia_Presentacion_*.docx

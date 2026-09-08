@@ -139,15 +139,16 @@ class FacturaSerializer(serializers.ModelSerializer):
         return attrs
 
     def create(self, validated_data):
-        factura = super().create(validated_data)
+        from .services import ESTADO_PENDIENTE, obtener_estado
 
-        from .services import sincronizar_estado_factura
-
-        return sincronizar_estado_factura(factura)
+        validated_data.pop('EstadoId', None)
+        validated_data['EstadoId'] = obtener_estado(ESTADO_PENDIENTE)
+        return super().create(validated_data)
 
     def update(self, instance, validated_data):
         validated_data.pop('Fecha_Emision', None)
         validated_data.pop('Hora_Emision', None)
+        validated_data.pop('EstadoId', None)
 
         factura = super().update(instance, validated_data)
 

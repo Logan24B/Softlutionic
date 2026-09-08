@@ -1,9 +1,10 @@
 const API_ORIGIN =
-  window.location.protocol === "http:" && window.location.port === "8000"
+  window.location.protocol === "http:" || window.location.protocol === "https:"
     ? window.location.origin
     : "http://127.0.0.1:8000";
 const API_BASE = `${API_ORIGIN}/api`;
 const IVA_RATE = 0;
+const DEFAULT_INVOICE_STATUS = "Pendiente";
 
 const invoiceItems = [];
 const apiState = {
@@ -36,7 +37,6 @@ const elements = {
   printButton: document.querySelector("#printButton"),
   issueDateInput: document.querySelector("#issueDateInput"),
   dueDateInput: document.querySelector("#dueDateInput"),
-  statusSelect: document.querySelector("#statusSelect"),
   observationInput: document.querySelector("#observationInput"),
   printPreviewSection: document.querySelector("#printPreviewSection"),
   invoiceDetailTable: document.querySelector("#invoiceDetailTable"),
@@ -466,7 +466,7 @@ async function syncInvoiceDetails(facturaId) {
   }
 }
 
-async function saveInvoice(statusOverride) {
+async function saveInvoice() {
   const customer = getSelectedCustomer();
   const tipoContrato = getSelectedTipoContrato();
 
@@ -529,13 +529,9 @@ async function saveInvoice(statusOverride) {
       apiState.facturas.unshift(facturaFinal);
     }
 
-    const selectedStatus = statusOverride || elements.statusSelect.value;
+    const savedStatus = getInvoiceStatus(facturaFinal) || DEFAULT_INVOICE_STATUS;
 
-    if (selectedStatus === "Pagada") {
-      await markInvoiceAsPaid(facturaFinal);
-    }
-
-    applyInvoiceToPreview(facturaFinal, selectedStatus);
+    applyInvoiceToPreview(facturaFinal, savedStatus);
     clearInvoiceForm();
     renderInvoiceHistory();
     alert(
@@ -588,7 +584,6 @@ function clearInvoiceForm() {
   updateDefaultDates();
   elements.quantityInput.value = 1;
   elements.discountInput.value = 0;
-  elements.statusSelect.value = "Pendiente";
   setInvoiceMode(false);
   renderInvoiceItems();
   renderPrintPreview();
@@ -612,22 +607,10 @@ function getInvoiceStatus(factura) {
   return "Pendiente";
 }
 
-function getPaymentForInvoice(facturaId) {
-  const payments = apiState.pagos.filter((pago) => Number(pago.FacturaId) === Number(facturaId));
-  return payments.find((pago) => Boolean(pago.EstadoPago)) || payments[0] || null;
-}
-
 function isInvoicePaid(factura) {
   return apiState.pagos.some(
     (pago) => Number(pago.FacturaId) === Number(factura.id) && Boolean(pago.EstadoPago)
   );
-}
-
-function getNextReceiptNumber() {
-  const numbers = apiState.pagos
-    .map((pago) => Number(pago.NumeroRecibo))
-    .filter((number) => Number.isFinite(number));
-  return (numbers.length ? Math.max(...numbers) : 0) + 1;
 }
 
 function filterInvoicesForHistory(invoices) {
@@ -682,33 +665,6 @@ function renderInvoiceHistory() {
   elements.invoiceHistoryTable.replaceChildren(fragment);
 }
 
-async function markInvoiceAsPaid(factura) {
-  const existing = getPaymentForInvoice(factura.id);
-  const payload = {
-    Fecha_Pago: new Date().toISOString(),
-    Monto_Pagado: Number(factura.Monto_Total || 0),
-    EstadoPago: true,
-    MetodoPago: existing ? Boolean(existing.MetodoPago) : false,
-    FacturaId: factura.id,
-    NumeroRecibo: existing?.NumeroRecibo || getNextReceiptNumber()
-  };
-
-  const saved = await fetchJson(
-    existing ? `${API_BASE}/pagos/${existing.id}/` : `${API_BASE}/pagos/`,
-    {
-      method: existing ? "PUT" : "POST",
-      body: JSON.stringify(payload)
-    }
-  );
-
-  if (existing) {
-    apiState.pagos = apiState.pagos.map((pago) => (Number(pago.id) === Number(saved.id) ? saved : pago));
-    return;
-  }
-
-  apiState.pagos.unshift(saved);
-}
-
 function detailToInvoiceItem(detail) {
   const service = detail.servicio_detalle || {};
   const cantidad = Number(detail.Cantidad || 1);
@@ -744,7 +700,6 @@ function loadInvoiceIntoForm(factura) {
   elements.contractSelect.value = tipoContratoId || "";
   elements.issueDateInput.value = toInputDateOnly(factura.Fecha_Emision);
   elements.dueDateInput.value = toInputDateOnly(factura.Fecha_Vencimiento);
-  elements.statusSelect.value = getInvoiceStatus(factura);
 
   invoiceItems.splice(0, invoiceItems.length, ...details.map(detailToInvoiceItem));
 
@@ -838,7 +793,7 @@ function renderPrintPreview() {
   const totals = updateTotals();
 
   elements.previewInvoiceCode.textContent = elements.invoiceCode.textContent;
-  elements.previewStatus.textContent = elements.statusSelect.value;
+  elements.previewStatus.textContent = DEFAULT_INVOICE_STATUS;
   elements.previewCustomer.textContent = customer
     ? `${customer.Nombre} ${customer.Apellido}`.trim()
     : "Cliente no seleccionado";
@@ -856,7 +811,7 @@ function renderPrintPreview() {
   renderPreviewItems();
 }
 
-function applyInvoiceToPreview(factura, status = "Pendiente") {
+function applyInvoiceToPreview(factura, status = DEFAULT_INVOICE_STATUS) {
   const customer = getInvoiceCustomer(factura) || {};
   const contract = factura.contrato_detalle || {};
   const details = factura.detalles || [];
@@ -1002,7 +957,7 @@ async function initInvoicePage() {
         return;
       }
 
-      saveInvoice("Pendiente");
+      saveInvoice();
     });
     elements.issueInvoiceButton.addEventListener("click", () => saveInvoice());
     elements.previewButton.addEventListener("click", showPrintPreview);

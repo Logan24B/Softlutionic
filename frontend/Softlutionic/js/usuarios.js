@@ -33,7 +33,7 @@ const userElements = {
 };
 
 function usersApiOrigin() {
-  if (window.location.protocol === "http:" && window.location.port === "8000") {
+  if (window.location.protocol === "http:" || window.location.protocol === "https:") {
     return window.location.origin;
   }
 

@@ -1,5 +1,5 @@
 const API_ORIGIN =
-  window.location.protocol === "http:" && window.location.port === "8000"
+  window.location.protocol === "http:" || window.location.protocol === "https:"
     ? window.location.origin
     : "http://127.0.0.1:8000";
 const API_BASE = `${API_ORIGIN}/api`;

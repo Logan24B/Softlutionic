@@ -1,4 +1,4 @@
-from mssql.base import DatabaseWrapper as MssqlDatabaseWrapper
+from mssql.base import Database, DatabaseWrapper as MssqlDatabaseWrapper
 
 
 class DatabaseWrapper(MssqlDatabaseWrapper):
@@ -16,3 +16,16 @@ class DatabaseWrapper(MssqlDatabaseWrapper):
             ';TrustServerCertificate=yes',
             ';Trusted_Connection=yes;TrustServerCertificate=yes',
         )
+
+    def get_new_connection(self, conn_params):
+        original_connect = Database.connect
+
+        def connect_without_unicode_results(connstr, *args, **kwargs):
+            kwargs.pop('unicode_results', None)
+            return original_connect(connstr, *args, **kwargs)
+
+        Database.connect = connect_without_unicode_results
+        try:
+            return super().get_new_connection(conn_params)
+        finally:
+            Database.connect = original_connect

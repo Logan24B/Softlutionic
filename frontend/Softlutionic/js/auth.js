@@ -1,5 +1,5 @@
 function softFacturApiOrigin() {
-  if (window.location.protocol === "http:" && window.location.port === "8000") {
+  if (window.location.protocol === "http:" || window.location.protocol === "https:") {
     return window.location.origin;
   }
 
@@ -13,6 +13,11 @@ function softFacturApiOrigin() {
 
 const SOFTFACTUR_API_ORIGIN = softFacturApiOrigin();
 const SOFTFACTUR_API_BASE = `${SOFTFACTUR_API_ORIGIN}/api`;
+let softFacturSessionTimeoutMs = 15 * 60 * 1000;
+let softFacturLastActivityAt = Date.now();
+let softFacturInactivityTimer = null;
+let softFacturIsLoggingOut = false;
+let softFacturInactivityWatcherStarted = false;
 
 async function softFacturFetch(path, options = {}) {
   const method = String(options.method || "GET").toUpperCase();
@@ -31,7 +36,7 @@ async function softFacturFetch(path, options = {}) {
   const data = await response.json().catch(() => null);
 
   if (!response.ok) {
-    throw new Error(data?.detail || `La API respondio con estado ${response.status}.`);
+    throw new Error(data?.detail || `La API respondió con estado ${response.status}.`);
   }
 
   return data;
@@ -76,6 +81,49 @@ function renderSession(user) {
   });
 }
 
+function rememberActivity() {
+  softFacturLastActivityAt = Date.now();
+  scheduleInactivityLogout();
+}
+
+function scheduleInactivityLogout() {
+  window.clearTimeout(softFacturInactivityTimer);
+
+  const elapsedMs = Date.now() - softFacturLastActivityAt;
+  const remainingMs = softFacturSessionTimeoutMs - elapsedMs;
+
+  if (remainingMs <= 0) {
+    logout();
+    return;
+  }
+
+  softFacturInactivityTimer = window.setTimeout(logout, remainingMs);
+}
+
+function startInactivityWatcher(timeoutSeconds) {
+  if (Number.isFinite(timeoutSeconds) && timeoutSeconds > 0) {
+    softFacturSessionTimeoutMs = timeoutSeconds * 1000;
+  }
+
+  if (softFacturInactivityWatcherStarted) {
+    rememberActivity();
+    return;
+  }
+  softFacturInactivityWatcherStarted = true;
+
+  ["click", "keydown", "mousemove", "scroll", "touchstart"].forEach((eventName) => {
+    window.addEventListener(eventName, rememberActivity, { passive: true });
+  });
+
+  document.addEventListener("visibilitychange", () => {
+    if (!document.hidden) {
+      scheduleInactivityLogout();
+    }
+  });
+
+  rememberActivity();
+}
+
 function adminTargetPath() {
   return window.location.pathname.includes("/pages/") ? "usuarios.html" : "pages/usuarios.html";
 }
@@ -84,20 +132,43 @@ function dashboardPath() {
   return window.location.pathname.includes("/pages/") ? "../index.html" : "index.html";
 }
 
+function defaultUserPath() {
+  return window.location.pathname.includes("/pages/") ? "facturas.html" : "pages/facturas.html";
+}
+
+function isDashboardPage() {
+  const pathname = window.location.pathname.toLowerCase();
+  return pathname.endsWith("/index.html") || pathname.endsWith("/softlutionic/");
+}
+
+function toggleRestrictedLinks(selector, visible) {
+  document.querySelectorAll(selector).forEach((link) => {
+    link.hidden = !visible;
+    link.style.display = visible ? "" : "none";
+    link.setAttribute("aria-hidden", String(!visible));
+    link.tabIndex = visible ? 0 : -1;
+  });
+}
+
 function applyAdminVisibility(user) {
   const isAdmin = Boolean(user?.Rol);
-  const adminLinks = document.querySelectorAll('a[href$="usuarios.html"]');
 
-  adminLinks.forEach((link) => {
-    link.hidden = !isAdmin;
-    link.style.display = isAdmin ? "" : "none";
-    link.setAttribute("aria-hidden", String(!isAdmin));
-    link.tabIndex = isAdmin ? 0 : -1;
+  toggleRestrictedLinks('a[href$="usuarios.html"]', isAdmin);
+  toggleRestrictedLinks('nav.menu a[href$="index.html"], nav.menu a[href$="../index.html"]', isAdmin);
+
+  document.querySelectorAll(".brand").forEach((brand) => {
+    brand.href = isAdmin ? dashboardPath() : defaultUserPath();
+    brand.setAttribute(
+      "aria-label",
+      isAdmin ? "Ir al dashboard" : "Ir a facturas"
+    );
   });
 
-  const onUsersPage = window.location.pathname.toLowerCase().endsWith("/usuarios.html");
-  if (!isAdmin && onUsersPage) {
-    window.location.href = dashboardPath();
+  const pathname = window.location.pathname.toLowerCase();
+  const onUsersPage = pathname.endsWith("/usuarios.html");
+
+  if (!isAdmin && (onUsersPage || isDashboardPage())) {
+    window.location.href = defaultUserPath();
   }
 }
 
@@ -106,6 +177,7 @@ async function requireSession() {
     const data = await softFacturFetch("/auth/session/");
     renderSession(data.user);
     applyAdminVisibility(data.user);
+    startInactivityWatcher(data.session_timeout_seconds);
     return data.user;
   } catch (error) {
     window.location.href = loginPath();
@@ -114,6 +186,12 @@ async function requireSession() {
 }
 
 async function logout() {
+  if (softFacturIsLoggingOut) {
+    return;
+  }
+  softFacturIsLoggingOut = true;
+  window.clearTimeout(softFacturInactivityTimer);
+
   try {
     await softFacturFetch("/auth/logout/", { method: "POST" });
   } finally {

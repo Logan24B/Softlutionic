@@ -58,7 +58,11 @@ class SessionAPIView(APIView):
     def get(self, request):
         if not request.user.is_authenticated:
             return Response({'authenticated': False}, status=status.HTTP_401_UNAUTHORIZED)
-        return Response({'authenticated': True, 'user': UserSerializer(request.user).data})
+        return Response({
+            'authenticated': True,
+            'user': UserSerializer(request.user).data,
+            'session_timeout_seconds': settings.SESSION_COOKIE_AGE,
+        })
 
 
 class LogoutAPIView(APIView):

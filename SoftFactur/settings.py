@@ -47,7 +47,12 @@ THIRD_PARTY_APPS = [
     'rest_framework',
 ]
 
-LOCAL_APPS = SEGURIDAD_SETTING_APPS + CATALOGOS_SETTING_APPS + TRANSACCION_SETTING_APPS
+LOCAL_APPS = (
+    ['apps.dashboard.apps.DashboardConfig']
+    + SEGURIDAD_SETTING_APPS
+    + CATALOGOS_SETTING_APPS
+    + TRANSACCION_SETTING_APPS
+)
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
@@ -103,6 +108,7 @@ DATABASES = {
             'driver': 'ODBC Driver 18 for SQL Server',  # Driver ODBC instalado
             'trusted_connection': 'yes',  # Habilita la autenticación de Windows
             'extra_params': 'TrustServerCertificate=yes;Encrypt=no',  # Desarrollo local con SQL Server Express
+            'connection_timeout': 5,
         },
     }
 }
@@ -165,6 +171,24 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.BasicAuthentication',
     ],
 }
+
+SOFTFACTUR_SESSION_IDLE_MINUTES = int(os.environ.get('SOFTFACTUR_SESSION_IDLE_MINUTES', '15'))
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'LOCATION': 'softfactur-sessions',
+    }
+}
+
+SESSION_ENGINE = os.environ.get(
+    'SOFTFACTUR_SESSION_ENGINE',
+    'django.contrib.sessions.backends.cache',
+)
+SESSION_CACHE_ALIAS = 'default'
+SESSION_COOKIE_AGE = SOFTFACTUR_SESSION_IDLE_MINUTES * 60
+SESSION_SAVE_EVERY_REQUEST = True
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
 SOFTFACTUR_EMAIL = 'loganblandon044@gmail.com'
 

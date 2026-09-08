@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
@@ -97,236 +97,76 @@
         </div>
       </header>
 
-      <section class="dashboard" aria-labelledby="dashboard-title">
+      <section class="dashboard dashboard-live" aria-labelledby="dashboard-title">
         <div class="dashboard-header">
           <div>
-            <h2 id="dashboard-title">Resumen general</h2>
-            <p>Ventas, facturas, clientes activos y cuentas por cobrar.</p>
+            <h2 id="dashboard-title">Dashboards operativos</h2>
+            <p>Indicadores basados en datos reales de BDsofactur.</p>
           </div>
 
-          <form class="filters" aria-label="Filtros del dashboard">
-            <label>
-              <span>Tipo de factura</span>
-              <select name="invoiceType">
-                <option value="all">Todas las facturas</option>
-                <option value="cash">Contado</option>
-                <option value="credit">Crédito</option>
-                <option value="void">Anulada</option>
-              </select>
-            </label>
-
-            <label>
-              <span>Periodo</span>
-              <select name="period">
-                <option value="year">Último año</option>
-                <option value="month">Último mes</option>
-                <option value="quarter">Último trimestre</option>
-                <option value="semester">Último semestre</option>
-              </select>
-            </label>
+          <form class="filters" id="dashboardFilters" aria-label="Filtros del dashboard">
+            <label><span>Desde</span><input type="date" name="start" /></label>
+            <label><span>Hasta</span><input type="date" name="end" /></label>
+            <button class="button-link" type="submit">Aplicar</button>
           </form>
         </div>
 
-        <section class="metrics-grid" aria-label="Indicadores principales">
-          <article class="metric-card purple">
-            <div>
-              <h3>Facturas emitidas</h3>
-              <strong>1,248</strong>
-              <p>+12% respecto al mes anterior</p>
-            </div>
-            <i class="fa-solid fa-file-invoice" aria-hidden="true"></i>
-          </article>
+        <div class="dashboard-tabs" role="tablist" aria-label="Apartados de dashboard">
+          <button class="dashboard-tab active" type="button" data-dashboard-tab="billing" role="tab" aria-selected="true"><i class="fa-solid fa-file-invoice-dollar" aria-hidden="true"></i><span>Facturación General</span></button>
+          <button class="dashboard-tab" type="button" data-dashboard-tab="customers" role="tab" aria-selected="false"><i class="fa-solid fa-users-gear" aria-hidden="true"></i><span>Clientes y Servicios</span></button>
+          <p class="refresh-status" id="refreshStatus">Actualizando datos...</p>
+        </div>
 
-          <article class="metric-card orange">
-            <div>
-              <h3>Ingresos facturados</h3>
-              <strong>C$ 842.5K</strong>
-              <p>+8% respecto al mes anterior</p>
-            </div>
-            <i class="fa-solid fa-money-bill-trend-up" aria-hidden="true"></i>
-          </article>
+        <p class="dashboard-message" id="dashboardMessage" hidden></p>
 
-          <article class="metric-card pink">
-            <div>
-              <h3>Clientes activos</h3>
-              <strong>326</strong>
-              <p>+5% respecto al mes anterior</p>
-            </div>
-            <i class="fa-solid fa-users" aria-hidden="true"></i>
-          </article>
+        <section class="dashboard-panel active" data-dashboard-panel="billing">
+          <section class="metrics-grid" aria-label="Indicadores de facturación">
+            <article class="metric-card purple"><div><h3>Total Facturado</h3><strong data-metric="total_facturado">C$ 0.00</strong><p>Suma de Facturas.Monto_Total</p></div><i class="fa-solid fa-file-invoice-dollar" aria-hidden="true"></i></article>
+            <article class="metric-card orange"><div><h3>Total Pagado</h3><strong data-metric="total_pagado">C$ 0.00</strong><p>Suma de Pagos.Monto_Pagado</p></div><i class="fa-solid fa-money-bill-trend-up" aria-hidden="true"></i></article>
+            <article class="metric-card pink"><div><h3>Saldo Pendiente</h3><strong data-metric="saldo_pendiente">C$ 0.00</strong><p>Total facturado menos total pagado</p></div><i class="fa-solid fa-wallet" aria-hidden="true"></i></article>
+            <article class="metric-card teal"><div><h3>Total Mora</h3><strong data-metric="total_mora">C$ 0.00</strong><p>Suma de Mora.Monto_Mora</p></div><i class="fa-solid fa-calendar-xmark" aria-hidden="true"></i></article>
+          </section>
 
-          <article class="metric-card teal">
-            <div>
-              <h3>Cuentas por cobrar</h3>
-              <strong>C$ 96.3K</strong>
-              <p>18 facturas pendientes</p>
-            </div>
-            <i class="fa-solid fa-wallet" aria-hidden="true"></i>
-          </article>
+          <section class="main-grid">
+            <article class="panel revenue-panel"><div class="panel-header"><div><h2>Total Facturado por mes</h2><p>Basado en Facturas.Fecha_Emision y Facturas.Monto_Total</p></div></div><div class="chart-canvas-wrap"><canvas id="billingBarChart"></canvas></div></article>
+            <article class="panel"><div class="panel-header"><div><h2>Facturas por estado</h2><p>Distribución desde estado_factura.estado</p></div></div><div class="chart-canvas-wrap compact"><canvas id="invoiceStatusChart"></canvas></div></article>
+          </section>
+
+          <section class="table-panel" aria-labelledby="billing-table-title">
+            <div class="panel-header"><div><h2 id="billing-table-title">Tabla de facturas</h2><p>CodigoFact, Fecha_Emision, Monto_Total y estado</p></div></div>
+            <div class="table-wrap"><table><thead><tr><th scope="col">Código</th><th scope="col">Fecha emisión</th><th scope="col">Monto total</th><th scope="col">Estado</th></tr></thead><tbody id="invoiceTable"><tr><td colspan="4">Cargando facturas...</td></tr></tbody></table></div>
+          </section>
         </section>
 
-        <section class="main-grid">
-          <article class="panel revenue-panel">
-            <div class="panel-header">
-              <div>
-                <h2>Facturación mensual</h2>
-                <p>Comparación con el período anterior</p>
-              </div>
+        <section class="dashboard-panel" data-dashboard-panel="customers">
+          <section class="metrics-grid" aria-label="Indicadores de clientes y servicios">
+            <article class="metric-card purple"><div><h3>Cantidad de Clientes</h3><strong data-metric="cantidad_clientes">0</strong><p>Conteo de Clientes.id</p></div><i class="fa-solid fa-users" aria-hidden="true"></i></article>
+            <article class="metric-card orange"><div><h3>Cantidad de Contratos</h3><strong data-metric="cantidad_contratos">0</strong><p>Conteo de Contratos.id</p></div><i class="fa-solid fa-file-signature" aria-hidden="true"></i></article>
+            <article class="metric-card pink"><div><h3>Ticket Promedio</h3><strong data-metric="ticket_promedio">C$ 0.00</strong><p>Total facturado / cantidad facturas</p></div><i class="fa-solid fa-receipt" aria-hidden="true"></i></article>
+            <article class="metric-card teal"><div><h3>Ingresos por Servicio</h3><strong data-metric="ingresos_por_servicio">C$ 0.00</strong><p>Suma de detalle de factura</p></div><i class="fa-solid fa-screwdriver-wrench" aria-hidden="true"></i></article>
+          </section>
 
-              <div class="panel-actions">
-                <button type="button" aria-label="Descargar reporte">
-                  <i class="fa-solid fa-download" aria-hidden="true"></i>
-                </button>
-                <button type="button" aria-label="Imprimir reporte">
-                  <i class="fa-solid fa-print" aria-hidden="true"></i>
-                </button>
-              </div>
-            </div>
+          <section class="dashboard-chart-grid">
+            <article class="panel"><div class="panel-header"><div><h2>Ingresos por Servicio</h2><p>PrecioVenta x Cantidad agrupado por Servicio</p></div></div><div class="chart-canvas-wrap"><canvas id="serviceRevenueChart"></canvas></div></article>
+            <article class="panel"><div class="panel-header"><div><h2>Contratos por Tipo</h2><p>Conteo desde TipoContrato.Nombre</p></div></div><div class="chart-canvas-wrap"><canvas id="contractTypeChart"></canvas></div></article>
+            <article class="panel"><div class="panel-header"><div><h2>Clientes por Departamento</h2><p>Conteo por departamentos.Nombre</p></div></div><div class="chart-canvas-wrap"><canvas id="departmentChart"></canvas></div></article>
+          </section>
 
-            <div class="chart-area">
-              <dl class="chart-info">
-                <div>
-                  <dt>Total emitido</dt>
-                  <dd>C$ 842,500</dd>
-                </div>
-                <div>
-                  <dt>Meta mensual</dt>
-                  <dd>C$ 780,000</dd>
-                </div>
-                <div>
-                  <dt>Cumplimiento</dt>
-                  <dd>108%</dd>
-                </div>
-              </dl>
-
-              <div class="bar-chart" aria-label="Gráfico de facturación por mes">
-                <div class="bar-group">
-                  <span class="bar previous" style="--bar-height: 80px"></span>
-                  <span class="bar current" style="--bar-height: 100px"></span>
-                  <strong>Ene</strong>
-                </div>
-                <div class="bar-group">
-                  <span class="bar previous" style="--bar-height: 95px"></span>
-                  <span class="bar current" style="--bar-height: 130px"></span>
-                  <strong>Feb</strong>
-                </div>
-                <div class="bar-group">
-                  <span class="bar previous" style="--bar-height: 125px"></span>
-                  <span class="bar current" style="--bar-height: 160px"></span>
-                  <strong>Mar</strong>
-                </div>
-                <div class="bar-group">
-                  <span class="bar previous" style="--bar-height: 145px"></span>
-                  <span class="bar current" style="--bar-height: 185px"></span>
-                  <strong>Abr</strong>
-                </div>
-                <div class="bar-group">
-                  <span class="bar previous" style="--bar-height: 180px"></span>
-                  <span class="bar current" style="--bar-height: 215px"></span>
-                  <strong>May</strong>
-                </div>
-                <div class="bar-group">
-                  <span class="bar previous" style="--bar-height: 210px"></span>
-                  <span class="bar current" style="--bar-height: 245px"></span>
-                  <strong>Jun</strong>
-                </div>
-              </div>
-            </div>
-
-            <footer class="panel-footer">
-              <a class="button-link" href="pages/reportes.html">Abrir reporte</a>
-            </footer>
-          </article>
-
-          <article class="panel">
-            <div class="panel-header">
-              <div>
-                <h2>Segmentos</h2>
-                <p>Ingresos por tipo de cliente</p>
-              </div>
-
-              <button type="button" aria-label="Más opciónes">
-                <i class="fa-solid fa-ellipsis-vertical" aria-hidden="true"></i>
-              </button>
-            </div>
-
-            <div class="pie-section">
-              <div class="pie-chart" aria-label="Distribución de ingresos por segmento"></div>
-
-              <ul class="legend" aria-label="Leyenda de segmentos">
-                <li><span class="lg-purple"></span> Mayorista</li>
-                <li><span class="lg-teal"></span> Minorista</li>
-                <li><span class="lg-pink"></span> Institucional</li>
-                <li><span class="lg-orange"></span> Crédito</li>
-              </ul>
-            </div>
-
-            <footer class="panel-footer">
-              <a class="button-link" href="pages/reportes.html">Abrir reporte</a>
-            </footer>
-          </article>
-        </section>
-
-        <section class="actions-grid" aria-label="Acciones destacadas">
-          <article class="action-card">
-            <i class="fa-solid fa-plus" aria-hidden="true"></i>
-            <div>
-              <h2>Nueva factura</h2>
-              <p>Crea documentos de venta, aplica impuestos y registra pagos.</p>
-              <a class="button-link" href="pages/facturas.html">Crear factura</a>
-            </div>
-          </article>
-
-          <article class="action-card warning">
-            <i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i>
-            <div>
-              <h2>Alertas de cobro</h2>
-              <p>18 facturas pendientes y 4 vencidas requieren seguimiento.</p>
-              <a class="button-link" href="pages/pagos.html">Ver alertas</a>
-            </div>
-          </article>
-
-          <article class="action-card success">
-            <i class="fa-solid fa-circle-check" aria-hidden="true"></i>
-            <div>
-              <h2>Control fiscal</h2>
-              <p>La numeración e impuestos están configurados correctamente.</p>
-              <a class="button-link" href="pages/configuracion.html">Revisar</a>
-            </div>
-          </article>
-        </section>
-
-        <section class="table-panel" aria-labelledby="latest-invoices-title">
-          <div class="panel-header">
-            <div>
-              <h2 id="latest-invoices-title">Últimas facturas</h2>
-              <p>Seguimiento operativo de documentos emitidos</p>
-            </div>
-          </div>
-
-          <div class="table-wrap">
-            <table>
-              <thead>
-                <tr>
-                  <th scope="col">Factura</th>
-                  <th scope="col">Cliente</th>
-                  <th scope="col">Fecha</th>
-                  <th scope="col">Monto</th>
-                  <th scope="col">Estado</th>
-                </tr>
-              </thead>
-
-              <tbody id="invoiceTable"></tbody>
-            </table>
-          </div>
+          <section class="table-panel" aria-labelledby="commercial-table-title">
+            <div class="panel-header"><div><h2 id="commercial-table-title">Tabla comercial</h2><p>Cliente, teléfono, estado del contrato y tipo de contrato</p></div></div>
+            <div class="table-wrap"><table><thead><tr><th scope="col">Nombre</th><th scope="col">Apellido</th><th scope="col">Teléfono</th><th scope="col">Estado contrato</th><th scope="col">Tipo contrato</th></tr></thead><tbody id="commercialTable"><tr><td colspan="5">Cargando datos comerciales...</td></tr></tbody></table></div>
+          </section>
         </section>
       </section>
     </main>
   </div>
 
-  <script src="js/auth.js?v=20260618-admin-menu-display"></script>
-  <script src="js/app.js"></script>
+  <script src="js/auth.js?v=20260618-session-timeout"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+  <script src="js/app.js?v=dashboard-api-20260620"></script>
 </body>
 </html>
+
+
 
 
