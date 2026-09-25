@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SoftFactur | Reportes gerenciales</title>
+<link rel="stylesheet" href="../css/styles.css"><link rel="stylesheet" href="../css/modules.css"><link rel="stylesheet" href="../css/tables.css"><link rel="stylesheet" href="../css/reportes.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head><body><div class="app-shell">    <aside class="sidebar" aria-label="Navegación principal">
+      <a class="brand" href="../index.html" aria-label="Ir al dashboard">
+        <img src="../assets/logo.png" alt="" />
+        <span>SoftFactur</span>
+      </a>
+      <nav class="menu">
+        <h2 class="menu-title">Gestión</h2>
+        <a class="menu-link" href="../index.html"><i class="fa-solid fa-chart-line" aria-hidden="true"></i><span>Dashboard</span></a>
+        <a class="menu-link" href="facturas.html"><i class="fa-solid fa-file-invoice" aria-hidden="true"></i><span>Facturas</span></a>
+        <a class="menu-link" href="clientes.html"><i class="fa-solid fa-users" aria-hidden="true"></i><span>Clientes</span></a>
+        <a class="menu-link" href="servicios.html"><i class="fa-solid fa-screwdriver-wrench" aria-hidden="true"></i><span>Servicios</span></a>
+        <a class="menu-link" href="pagos.html"><i class="fa-solid fa-credit-card" aria-hidden="true"></i><span>Pagos</span></a>
+        <a class="menu-link" href="moras.html"><i class="fa-solid fa-calendar-xmark" aria-hidden="true"></i><span>Moras</span></a>
+        <a class="menu-link active" href="reportes.html" aria-current="page"><i class="fa-solid fa-chart-pie" aria-hidden="true"></i><span>Reportes</span></a>
+        <h2 class="menu-title">Administración</h2>
+        <a class="menu-link" href="usuarios.html"><i class="fa-solid fa-user-gear" aria-hidden="true"></i><span>Usuarios</span></a>
+        <a class="menu-link" href="configuracion.html"><i class="fa-solid fa-gear" aria-hidden="true"></i><span>Configuración</span></a>
+      </nav>
+      <section class="user-box" aria-label="Sesión actual">
+        <small>Sesión activa</small>
+        <strong>Administrador</strong>
+      </section>
+    </aside>
+
+
+<main class="main-content"><header class="topbar"><div><p class="eyebrow">Información para decidir</p><h1>Reportes gerenciales</h1><p>Facturación, cobranza y seguimiento comercial.</p></div>
+<button id="printReport" class="button-link secondary" disabled>Imprimir / PDF</button></header>
+<form id="reportFilters" class="report-filters panel">
+<label>Período<select id="period"><option value="month">Este mes</option><option value="previous">Mes anterior</option><option value="year">Este año</option><option value="custom">Personalizado</option></select></label>
+<label>Desde<input name="start" type="date" required></label><label>Hasta<input name="end" type="date" required></label>
+<button class="button-link" type="submit">Generar reporte</button></form>
+<p id="reportMessage" role="status" aria-live="polite">Preparando reportes…</p>
+<div id="reportContent" hidden><p id="reportStamp" class="report-note"></p>
+<section class="metrics-grid" id="reportMetrics" aria-label="Indicadores gerenciales"></section>
+<div class="report-notes panel"><strong>Criterios del reporte</strong><p>Facturación: facturas emitidas en el período, excluyendo anuladas. Cobros: pagos confirmados por fecha de pago, incluso de facturas de otros períodos. No representan utilidad ni una tasa de recuperación.</p><p>Cartera y renovaciones: situación actual al generar el reporte, independiente del período. El saldo descuenta abonos confirmados por factura; no incluye recargos de mora ni compensa sobrepagos entre facturas. Los contratos mostrados están activos y vencen en los próximos 30 días.</p></div>
+<nav class="report-tabs" aria-label="Secciones del reporte"><a href="#monthly">Evolución</a><a href="#portfolio">Cartera</a><a href="#services">Servicios</a><a href="#customers">Clientes</a><a href="#renewals">Renovaciones</a></nav>
+<div id="reportSections"></div></div></main></div>
+<script src="../js/auth.js"></script><script src="../js/reportes.js"></script></body></html>

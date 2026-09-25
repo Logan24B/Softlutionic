@@ -154,6 +154,7 @@ function applyAdminVisibility(user) {
   const isAdmin = Boolean(user?.Rol);
 
   toggleRestrictedLinks('a[href$="usuarios.html"]', isAdmin);
+  toggleRestrictedLinks('a[href$="reportes.html"]', isAdmin);
   toggleRestrictedLinks('nav.menu a[href$="index.html"], nav.menu a[href$="../index.html"]', isAdmin);
 
   document.querySelectorAll(".brand").forEach((brand) => {
@@ -167,7 +168,7 @@ function applyAdminVisibility(user) {
   const pathname = window.location.pathname.toLowerCase();
   const onUsersPage = pathname.endsWith("/usuarios.html");
 
-  if (!isAdmin && (onUsersPage || isDashboardPage())) {
+  if (!isAdmin && (onUsersPage || pathname.endsWith('/reportes.html') || isDashboardPage())) {
     window.location.href = defaultUserPath();
   }
 }

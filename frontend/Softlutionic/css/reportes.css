@@ -1,0 +1,28 @@
+.report-filters { display: flex; flex-wrap: wrap; align-items: end; gap: 18px; padding: 20px; }
+.report-filters label { display: grid; gap: 8px; color: var(--muted); font-size: .9rem; }
+.report-filters input, .report-filters select { padding: 10px; border: 1px solid var(--line); border-radius: 8px; background: white; font: inherit; color: var(--text); }
+.report-note, .report-notes { color: var(--muted); font-size: .88rem; line-height: 1.6; }
+.report-notes { padding: 20px; margin: 24px 0; }
+.report-tabs { display: flex; flex-wrap: wrap; gap: 12px; margin: 24px 0; }
+.report-tabs a { background: white; border: 1px solid var(--line); border-radius: 20px; padding: 8px 16px; }
+.report-section { padding: 24px; margin-bottom: 24px; scroll-margin-top: 20px; }
+.report-heading { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; }
+.report-heading h2 { margin: 0; font-size: 1.15rem; }
+.report-table-wrap { overflow-x: auto; }
+.report-section table { width: 100%; border-collapse: collapse; margin-top: 16px; font-size: .9rem; }
+.report-section th, .report-section td { padding: 12px; text-align: left; border-bottom: 1px solid var(--line); }
+.report-section th { background: var(--surface-soft); }
+.report-section td.amount { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.report-section caption { text-align: left; color: var(--muted); padding: 8px 0; }
+.report-bar { display: inline-block; height: 6px; background: var(--purple); border-radius: 4px; margin-left: 12px; vertical-align: middle; }
+.report-pager { display: flex; align-items: center; justify-content: end; gap: 16px; margin-top: 16px; }
+button:disabled { opacity: .5; cursor: default; }
+#reportMessage[data-error="true"] { color: var(--red); }
+@media(max-width: 700px) { .report-section { padding: 14px; } .report-filters label { flex: 1 1 130px; } .report-filters input { min-width: 0; width: 100%; } }
+@media print {
+  .sidebar, .report-filters, .report-tabs, #printReport, #reportMessage, .report-section button, .report-pager { display: none !important; }
+  .app-shell { display: block; } .main-content { padding: 0; } body { background: white; font-size: 10pt; }
+  .metric-card, .panel { box-shadow: none; border: 1px solid #ddd; } .metrics-grid { grid-template-columns: repeat(2, 1fr); }
+  .report-table-wrap { overflow: visible; } tr, .metric-card { break-inside: avoid; } thead { display: table-header-group; }
+  .report-section { padding: 10px; } .report-bar { display: none; }
+}
