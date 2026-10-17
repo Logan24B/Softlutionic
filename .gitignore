@@ -383,3 +383,9 @@ pyrightconfig.json
 
 # Guias de presentacion en formato Office (no versionar binarios)
 Guia_Presentacion_*.docx
+
+# Private SQL credentials and recovery artifacts
+.private/
+.recovery/
+.tools/
+.runtime/

@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 import os
+import socket
 from pathlib import Path
 
 from apps.catalogos.setting_apps import CATALOGOS_SETTING_APPS
@@ -26,10 +27,16 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-_^g1s7$h$liggji3v79#^%ro15s86tvn7a5%2_g117a0hycjug'
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# Start-System.ps1 generates this private, persistent signing key.
+_private_key = BASE_DIR / '.private' / 'django-secret.key'
+if _private_key.exists():
+    SECRET_KEY = _private_key.read_text(encoding='utf-8').strip()
+SECRET_KEY = os.environ.get('SOFTFACTUR_SECRET_KEY', SECRET_KEY)
 
-ALLOWED_HOSTS = []
+DEBUG = os.environ.get('SOFTFACTUR_DEBUG', 'false').lower() == 'true'
+
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '[::1]', socket.gethostname().lower()]
+ALLOWED_HOSTS += [host.strip() for host in os.environ.get('SOFTFACTUR_ALLOWED_HOSTS', '').split(',') if host.strip()]
 
 
 # Application definition
@@ -58,8 +65,8 @@ INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
 
 MIDDLEWARE = [
-    'SoftFactur.cors.DevCorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -67,6 +74,9 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+if DEBUG:
+    MIDDLEWARE.insert(0, 'SoftFactur.cors.DevCorsMiddleware')
 
 ROOT_URLCONF = 'SoftFactur.urls'
 
@@ -98,22 +108,12 @@ WSGI_APPLICATION = 'SoftFactur.wsgi.application'
 #   }
 #}
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'SoftFactur.db.backends.mssql_no_mars',  # Backend mssql-django sin MARS para este SQL Server local
-        'NAME': 'BDsofactur',  # Nombre de la base de datos
-        'HOST': 'localhost',  # SQL Server Express por TCP
-        'PORT': '1433',
-        'OPTIONS': {
-            'driver': 'ODBC Driver 18 for SQL Server',  # Driver ODBC instalado
-            'trusted_connection': 'yes',  # Habilita la autenticación de Windows
-            'extra_params': 'TrustServerCertificate=yes;Encrypt=no',  # Desarrollo local con SQL Server Express
-            'connection_timeout': 5,
-        },
-    }
-}
+from SoftFactur.database_config import database_config
 
+if '172.16.0.5' not in ALLOWED_HOSTS:
+    ALLOWED_HOSTS = [*ALLOWED_HOSTS, '172.16.0.5']
 
+DATABASES = {'default': database_config()}
 
 
 # Password validation
@@ -151,6 +151,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT = BASE_DIR / '.runtime' / 'staticfiles'
 STATICFILES_DIRS = [
     BASE_DIR / 'static',
 ]

@@ -32,6 +32,15 @@ class UserSerializer(serializers.ModelSerializer):
             'is_active',
         ]
         read_only_fields = ['id', 'rol_descripcion', 'FechaRegistro', 'HoraRegistro']
+        extra_kwargs = {
+            'SegundoNombre': {
+                'label': 'Primer apellido',
+                'error_messages': {
+                    'required': 'El primer apellido es obligatorio.',
+                    'blank': 'El primer apellido es obligatorio.',
+                },
+            },
+        }
 
     def validate(self, attrs):
         if not attrs.get('username') and attrs.get('email'):
@@ -51,10 +60,10 @@ class UserSerializer(serializers.ModelSerializer):
         return primer_nombre
 
     def validate_SegundoNombre(self, value):
-        segundo_nombre = value.strip()
-        if not segundo_nombre:
-            raise serializers.ValidationError('El segundo nombre es obligatorio.')
-        return segundo_nombre
+        primer_apellido = value.strip()
+        if not primer_apellido:
+            raise serializers.ValidationError('El primer apellido es obligatorio.')
+        return primer_apellido
 
     def create(self, validated_data):
         password = validated_data.pop('password', None)
