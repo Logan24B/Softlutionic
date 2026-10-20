@@ -20,12 +20,19 @@ class user(AbstractUser):
         return 'Administrador' if self.Rol else 'Empleado'
 
     def save(self, *args, **kwargs):
-        if self.PrimerNombre:
-            self.first_name = self.PrimerNombre
-        if self.SegundoNombre:
-            self.last_name = self.SegundoNombre
+    if self.PrimerNombre:
+        self.first_name = self.PrimerNombre
+
+    if self.SegundoNombre:
+        self.last_name = self.SegundoNombre
+
+    if self.is_superuser:
+        self.Rol = True
+        self.is_staff = True
+    else:
         self.is_staff = self.Rol
-        super().save(*args, **kwargs)
+
+    super().save(*args, **kwargs)
 
     def __str__(self):
         nombre_completo = f'{self.PrimerNombre} {self.SegundoNombre}'.strip()
