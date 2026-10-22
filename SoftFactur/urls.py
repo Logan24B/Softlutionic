@@ -20,5 +20,6 @@ urlpatterns = [
     path('', RedirectView.as_view(url='/frontend/Softlutionic/login.html', permanent=False)),
     path('frontend/', RedirectView.as_view(url='/frontend/Softlutionic/login.html', permanent=False)),
     path('frontend/<path:path>', serve_frontend),
+    path('api/mobile/v1/', include('apps.mobile_api.urls')),
     path('api/', include('apps.urls')),
 ]

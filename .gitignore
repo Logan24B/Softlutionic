@@ -389,3 +389,6 @@ Guia_Presentacion_*.docx
 .recovery/
 .tools/
 .runtime/
+
+# Local isolated mobile verification dependencies
+.mobile-test-deps/
