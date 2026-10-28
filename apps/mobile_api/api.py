@@ -7,6 +7,8 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 from apps.transaccion.factura.serializers import FacturaSerializer, DetalleFacturaSerializer
 from .registry import MODULES, capabilities
 from .auth import identity
+from .policy import MobileAuthorizationPolicy as Policy
+from .serializers import MobileUserSerializer
 
 class MobilePermission(permissions.BasePermission):
     def has_permission(self, request, view):
@@ -14,7 +16,16 @@ class MobilePermission(permissions.BasePermission):
             return False
         action = {'list':'read','retrieve':'read','metadata':'read','create':'create',
                   'update':'update','partial_update':'update','destroy':'delete'}.get(view.action, 'read')
-        return capabilities(request.user, view.mobile_name).get(action, False)
+        allowed = capabilities(request.user, view.mobile_name).get(action, False)
+        if not allowed and view.mobile_name == 'servicios' and action != 'read':
+            self.message = 'No tienes permiso para modificar servicios.'
+        return allowed
+
+    def has_object_permission(self, request, view, obj):
+        if view.mobile_name == 'usuarios':
+            Policy.check_user_access(
+                request.user, obj, read_only=request.method in permissions.SAFE_METHODS)
+        return True
 
 class AtomicInvoiceSerializer(FacturaSerializer):
     UsuarioId = serializers.HiddenField(default=serializers.CurrentUserDefault())
@@ -49,6 +60,18 @@ class MobileMixin:
     authentication_classes = [JWTAuthentication]
     permission_classes = [MobilePermission]
     pagination_class = None
+    def get_serializer_class(self):
+        if self.mobile_name == 'usuarios':
+            return MobileUserSerializer
+        return super().get_serializer_class()
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        # Filter collections, but retain detail lookup so forbidden targets return 403.
+        if self.mobile_name == 'usuarios' and not self.detail:
+            return Policy.visible_users(self.request.user, queryset)
+        return queryset
+
     def handle_exception(self, exc):
         if isinstance(exc, (ProtectedError, IntegrityError)):
             return Response({'detail': 'El registro tiene dependencias o un valor duplicado.'}, status=409)
@@ -78,7 +101,8 @@ class SchemaView(MeView):
             caps = capabilities(request.user, name)
             if not caps['read']:
                 continue
-            serializer = view.serializer_class(context={'request': request})
+            serializer_class = MobileUserSerializer if name == 'usuarios' else view.serializer_class
+            serializer = serializer_class(context={'request': request})
             fields = []
             for key, field in serializer.fields.items():
                 if field.read_only or key in {'UsuarioId', 'EstadoId'} and name == 'facturas':

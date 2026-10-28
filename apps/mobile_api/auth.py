@@ -3,13 +3,14 @@ from django.db.models import Q
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework.throttling import AnonRateThrottle
-from apps.seguridad.usuarios.serializers import UserSerializer
+from .serializers import MobileUserSerializer
+from .policy import MobileAuthorizationPolicy as Policy
 from .registry import MODULES, capabilities
 
 def identity(user):
-    return {'user': UserSerializer(user).data,
+    return {'user': MobileUserSerializer(user).data,
             'permissions': {name: capabilities(user, name) for name in MODULES},
-            'dashboard': bool(user.Rol)}
+            'dashboard': Policy.is_admin(user)}
 
 class MobileTokenSerializer(TokenObtainPairSerializer):
     def validate(self, attrs):

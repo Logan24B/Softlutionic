@@ -17,10 +17,14 @@ MODULES = {
  'pagos': PagoViewSet, 'moras': MoraViewSet,
  'notificaciones': NotificacionViewSet, 'auditoria': LogAuditoriaViewSet,
 }
+from .policy import MobileAuthorizationPolicy as Policy
+
 ADMIN_ONLY = {'usuarios', 'auditoria'}
 READ_ONLY = {'estados-factura', 'moras', 'auditoria'}
 def capabilities(user, name):
-    read = bool(user.is_authenticated and (name not in ADMIN_ONLY or user.Rol))
+    read = bool(user.is_authenticated and (name not in ADMIN_ONLY or Policy.is_admin(user)))
     write = read and name not in READ_ONLY
-    return {'read': read, 'create': write, 'update': write,
-            'delete': write and name not in {'facturas', 'pagos'}}
+    existing = {'read': read, 'create': write, 'update': write,
+                'delete': write and name not in {'facturas', 'pagos'}}
+    return {operation: allowed and Policy.allows(user, name, operation)
+            for operation, allowed in existing.items()}
