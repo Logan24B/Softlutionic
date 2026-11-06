@@ -3,6 +3,8 @@ from rest_framework.exceptions import PermissionDenied
 
 
 class MobileAuthorizationPolicy:
+    EMPLOYEE_READ_ONLY_MODULES = frozenset({'servicios', 'tipos-contrato'})
+
     @staticmethod
     def role(user):
         if user.is_superuser:
@@ -17,7 +19,7 @@ class MobileAuthorizationPolicy:
     def allows(cls, user, module, operation):
         if module == 'usuarios':
             return cls.is_admin(user)
-        if module == 'servicios' and operation != 'read':
+        if module in cls.EMPLOYEE_READ_ONLY_MODULES and operation != 'read':
             return cls.is_admin(user)
         return True
 

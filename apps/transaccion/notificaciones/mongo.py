@@ -47,13 +47,16 @@ def notify_after_commit(instance):
 
     def publish():
         try:
-            collection().insert_one({
+            document = {
                 'tipo': kind, 'titulo': title, 'mensaje': message,
                 'origen': 'django_softlutionic', 'referencia': reference,
                 'prioridad': 'normal', 'estado': 'activa',
                 'destinatarios_roles': ['ADMIN', 'SUPERUSER'],
                 'fecha_creacion': datetime.now(timezone.utc), 'lecturas': [],
-            })
+            }
+            document['_id'] = collection().insert_one(document).inserted_id
+            from apps.mobile_api.push import enqueue_notification
+            enqueue_notification(document)
         except Exception as exc:
             # Do not log the exception text: driver errors can contain connection data.
             logger.error('Mongo notification failed after SQL commit: tipo=%s id_sql=%s error=%s',

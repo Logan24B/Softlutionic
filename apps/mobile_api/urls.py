@@ -7,6 +7,7 @@ from .auth import LoginView
 from .api import MeView, SchemaView, MobileMixin, AtomicInvoiceSerializer
 from .registry import MODULES
 from .notifications import NotificationViewSet
+from .push import PushDeviceView
 router = DefaultRouter()
 for name, original in MODULES.items():
     if name == 'notificaciones':
@@ -18,6 +19,8 @@ for name, original in MODULES.items():
     cls = type('Mobile' + original.__name__, (MobileMixin, original), attrs)
     router.register(name, cls, basename='mobile-' + name)
 urlpatterns = [
+ path('push/devices/', PushDeviceView.as_view()),
+ path('push/devices/unregister/', PushDeviceView.as_view(unregister=True)),
  path('auth/login/', LoginView.as_view()),
  path('auth/refresh/', TokenRefreshView.as_view()),
  path('auth/me/', MeView.as_view()),

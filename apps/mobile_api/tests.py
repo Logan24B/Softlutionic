@@ -242,3 +242,81 @@ class MobileAuthorizationTests(TestCase):
         self.assertEqual(self.client.get('/api/mobile/v1/usuarios/').status_code, 403)
         for target in [self.employee, self.admin, self.root]:
             self.assertEqual(self.client.get(self.url(target)).status_code, 403)
+
+
+class MobileContractTypeAuthorizationTests(TestCase):
+    base = '/api/mobile/v1/tipos-contrato/'
+
+    def setUp(self):
+        User = get_user_model()
+        self.employee = User.objects.create_user(username='worker', password='test-pass', Rol=False)
+        self.admin = User.objects.create_user(username='manager', password='test-pass', Rol=True)
+        self.root = User.objects.create_superuser(username='root', password='test-pass')
+        self.kind = TipoContrato.objects.create(Nombre='Original', Descripcion='Catalogo')
+        self.detail = f'{self.base}{self.kind.pk}/'
+        self.client = APIClient()
+        self.client.force_authenticate(self.employee)
+
+    def test_employee_list(self):
+        response = self.client.get(self.base)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(self.kind.pk, [row['id'] for row in response.data])
+
+    def test_employee_detail(self):
+        response = self.client.get(self.detail)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data['id'], self.kind.pk)
+
+    def assert_employee_write_denied(self, method):
+        before = list(TipoContrato.objects.order_by('pk').values())
+        url = self.base if method == 'post' else self.detail
+        response = getattr(self.client, method)(url, {'Nombre': 'Cambiado', 'Descripcion': 'Cambio'}, format='json')
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(str(response.data['detail']), 'No tienes permiso para modificar tipos de contrato.')
+        self.assertEqual(list(TipoContrato.objects.order_by('pk').values()), before)
+
+    def test_employee_post_denied(self):
+        self.assert_employee_write_denied('post')
+
+    def test_employee_patch_denied(self):
+        self.assert_employee_write_denied('patch')
+
+    def test_employee_put_denied(self):
+        self.assert_employee_write_denied('put')
+
+    def test_employee_delete_denied(self):
+        self.assert_employee_write_denied('delete')
+
+    def test_employee_schema_retains_read_only_catalog(self):
+        response = self.client.get('/api/mobile/v1/schema/')
+        self.assertEqual(response.status_code, 200)
+        module = next(m for m in response.data if m['name'] == 'tipos-contrato')
+        self.assertEqual(module['permissions'], dict(read=True, create=False, update=False, delete=False))
+
+    def assert_privileged_crud(self, actor):
+        self.client.force_authenticate(actor)
+        schema = self.client.get('/api/mobile/v1/schema/')
+        self.assertEqual(schema.status_code, 200)
+        module = next(m for m in schema.data if m['name'] == 'tipos-contrato')
+        self.assertEqual(module['permissions'], dict(read=True, create=True, update=True, delete=True))
+        self.assertEqual(self.client.get(self.base).status_code, 200)
+        response = self.client.post(self.base, {'Nombre': 'Nuevo', 'Descripcion': 'Creado'}, format='json')
+        self.assertEqual(response.status_code, 201, response.data)
+        url = f"{self.base}{response.data['id']}/"
+        self.assertEqual(self.client.get(url).status_code, 200)
+        response = self.client.patch(url, {'Descripcion': 'Parcial'}, format='json')
+        self.assertEqual(response.status_code, 200, response.data)
+        self.assertEqual(response.data['Descripcion'], 'Parcial')
+        response = self.client.put(url, {'Nombre': 'Actualizado', 'Descripcion': 'Completo'}, format='json')
+        self.assertEqual(response.status_code, 200, response.data)
+        self.assertEqual(response.data['Nombre'], 'Actualizado')
+        self.assertEqual(self.client.delete(url).status_code, 204)
+        self.assertFalse(TipoContrato.objects.filter(Nombre='Actualizado').exists())
+
+    def test_admin_preserves_crud(self):
+        self.assert_privileged_crud(self.admin)
+
+    def test_superuser_preserves_crud_even_without_rol(self):
+        self.root.Rol = False
+        self.root.save(update_fields=['Rol'])
+        self.assert_privileged_crud(self.root)
