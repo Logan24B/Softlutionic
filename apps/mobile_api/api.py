@@ -17,8 +17,9 @@ class MobilePermission(permissions.BasePermission):
         action = {'list':'read','retrieve':'read','metadata':'read','create':'create',
                   'update':'update','partial_update':'update','destroy':'delete'}.get(view.action, 'read')
         allowed = capabilities(request.user, view.mobile_name).get(action, False)
-        if not allowed and view.mobile_name == 'servicios' and action != 'read':
-            self.message = 'No tienes permiso para modificar servicios.'
+        if not allowed and view.mobile_name in Policy.EMPLOYEE_READ_ONLY_MODULES and action != 'read':
+            label = {'servicios': 'servicios', 'tipos-contrato': 'tipos de contrato'}[view.mobile_name]
+            self.message = f'No tienes permiso para modificar {label}.'
         return allowed
 
     def has_object_permission(self, request, view, obj):
@@ -100,6 +101,9 @@ class SchemaView(MeView):
         for name, view in MODULES.items():
             caps = capabilities(request.user, name)
             if not caps['read']:
+                continue
+            if name == 'notificaciones':
+                result.append({'name': name, 'permissions': caps, 'fields': []})
                 continue
             serializer_class = MobileUserSerializer if name == 'usuarios' else view.serializer_class
             serializer = serializer_class(context={'request': request})

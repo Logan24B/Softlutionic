@@ -6,8 +6,12 @@ from apps.dashboard.api import DashboardFacturacionAPIView, DashboardClientesSer
 from .auth import LoginView
 from .api import MeView, SchemaView, MobileMixin, AtomicInvoiceSerializer
 from .registry import MODULES
+from .notifications import NotificationViewSet
 router = DefaultRouter()
 for name, original in MODULES.items():
+    if name == 'notificaciones':
+        router.register(name, NotificationViewSet, basename='mobile-' + name)
+        continue
     attrs = {'mobile_name': name, '__module__': __name__}
     if name == 'facturas':
         attrs['serializer_class'] = AtomicInvoiceSerializer

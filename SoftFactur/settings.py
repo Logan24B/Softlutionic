@@ -8,6 +8,10 @@ import os
 import socket
 from pathlib import Path
 
+MONGODB_URI = os.environ.get('MONGODB_URI', '')
+MONGODB_DATABASE = os.environ.get('MONGODB_DATABASE', 'softlutionic_nosql')
+MONGODB_NOTIFICATIONS_COLLECTION = os.environ.get('MONGODB_NOTIFICATIONS_COLLECTION', 'notificaciones')
+
 from apps.catalogos.setting_apps import CATALOGOS_SETTING_APPS
 from apps.seguridad.setting_apps import SEGURIDAD_SETTING_APPS
 from apps.transaccion.setting_apps import TRANSACCION_SETTING_APPS

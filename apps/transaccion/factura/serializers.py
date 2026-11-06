@@ -1,4 +1,5 @@
 from django.contrib.auth import get_user_model
+from django.db import transaction
 from rest_framework import serializers
 
 from apps.catalogos.servicios.models import Servicio
@@ -138,12 +139,16 @@ class FacturaSerializer(serializers.ModelSerializer):
 
         return attrs
 
+    @transaction.atomic
     def create(self, validated_data):
         from .services import ESTADO_PENDIENTE, obtener_estado
+        from apps.transaccion.notificaciones.mongo import notify_after_commit
 
         validated_data.pop('EstadoId', None)
         validated_data['EstadoId'] = obtener_estado(ESTADO_PENDIENTE)
-        return super().create(validated_data)
+        invoice = super().create(validated_data)
+        notify_after_commit(invoice)
+        return invoice
 
     def update(self, instance, validated_data):
         validated_data.pop('Fecha_Emision', None)
