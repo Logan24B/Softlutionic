@@ -19,8 +19,11 @@ MODULES = {
 }
 from .policy import MobileAuthorizationPolicy as Policy
 
-ADMIN_ONLY = {'usuarios', 'auditoria'}
-READ_ONLY = {'estados-factura', 'moras', 'auditoria', 'notificaciones'}
+CONTACT_MODULE = 'solicitudes-contacto'
+MOBILE_NAMES = (*MODULES, CONTACT_MODULE)
+
+ADMIN_ONLY = {'usuarios', 'auditoria', CONTACT_MODULE}
+READ_ONLY = {'estados-factura', 'moras', 'auditoria', 'notificaciones', CONTACT_MODULE}
 def capabilities(user, name):
     read = bool(user.is_authenticated and (name not in ADMIN_ONLY or Policy.is_admin(user)))
     write = read and name not in READ_ONLY

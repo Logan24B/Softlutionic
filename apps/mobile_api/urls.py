@@ -5,10 +5,12 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 from apps.dashboard.api import DashboardFacturacionAPIView, DashboardClientesServiciosAPIView
 from .auth import LoginView
 from .api import MeView, SchemaView, MobileMixin, AtomicInvoiceSerializer
-from .registry import MODULES
+from .registry import MODULES, CONTACT_MODULE
 from .notifications import NotificationViewSet
+from .contact_requests import ContactRequestViewSet
 from .push import PushDeviceView
 router = DefaultRouter()
+router.register(CONTACT_MODULE, ContactRequestViewSet, basename='mobile-contact-requests')
 for name, original in MODULES.items():
     if name == 'notificaciones':
         router.register(name, NotificationViewSet, basename='mobile-' + name)

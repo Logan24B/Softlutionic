@@ -5,11 +5,11 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework.throttling import AnonRateThrottle
 from .serializers import MobileUserSerializer
 from .policy import MobileAuthorizationPolicy as Policy
-from .registry import MODULES, capabilities
+from .registry import MOBILE_NAMES, capabilities
 
 def identity(user):
     return {'user': MobileUserSerializer(user).data,
-            'permissions': {name: capabilities(user, name) for name in MODULES},
+            'permissions': {name: capabilities(user, name) for name in MOBILE_NAMES},
             'dashboard': Policy.is_admin(user)}
 
 class MobileTokenSerializer(TokenObtainPairSerializer):

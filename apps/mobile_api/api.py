@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from apps.transaccion.factura.serializers import FacturaSerializer, DetalleFacturaSerializer
-from .registry import MODULES, capabilities
+from .registry import MODULES, CONTACT_MODULE, capabilities
 from .auth import identity
 from .policy import MobileAuthorizationPolicy as Policy
 from .serializers import MobileUserSerializer
@@ -117,4 +117,7 @@ class SchemaView(MeView):
                     item['relation'] = model_routes.get(field.queryset.model)
                 fields.append(item)
             result.append({'name': name, 'permissions': caps, 'fields': fields})
+        contact_caps = capabilities(request.user, CONTACT_MODULE)
+        if contact_caps['read']:
+            result.append({'name': CONTACT_MODULE, 'permissions': contact_caps, 'fields': []})
         return Response(result)
