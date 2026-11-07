@@ -109,7 +109,7 @@ jobs:
           if len(secret) < 32:
               raise SystemExit('Missing contact push repository secret.')
           with open(os.environ['CONTACT_SETTINGS_PATH'], 'w', encoding='utf-8') as stream:
-              json.dump({'CONTACT_PUSH_SECRET': secret}, stream)
+              json.dump({'CONTACT_PUSH_SECRET': secret, 'CONTACT_PUSH_POLL_ENABLED': 'true'}, stream)
           PY
           az webapp config appsettings set --resource-group SoftlutionicREC --name softlutionic-sistema --settings "@$settings_file" --output none
 
