@@ -9,6 +9,7 @@ from .registry import MODULES, CONTACT_MODULE
 from .notifications import NotificationViewSet
 from .contact_requests import ContactRequestViewSet
 from .push import PushDeviceView
+from .contact_push import ContactPushView
 router = DefaultRouter()
 router.register(CONTACT_MODULE, ContactRequestViewSet, basename='mobile-contact-requests')
 for name, original in MODULES.items():
@@ -21,6 +22,7 @@ for name, original in MODULES.items():
     cls = type('Mobile' + original.__name__, (MobileMixin, original), attrs)
     router.register(name, cls, basename='mobile-' + name)
 urlpatterns = [
+ path('push/contact/', ContactPushView.as_view()),
  path('push/devices/', PushDeviceView.as_view()),
  path('push/devices/unregister/', PushDeviceView.as_view(unregister=True)),
  path('auth/login/', LoginView.as_view()),

@@ -96,6 +96,23 @@ jobs:
           PY
           az webapp config appsettings set --resource-group SoftlutionicREC --name softlutionic-sistema --settings "@$settings_file" --output none
 
+      - name: Configure contact push bridge
+        env:
+          CONTACT_PUSH_SECRET: ${{ secrets.CONTACT_PUSH_SECRET }}
+        run: |
+          settings_file="$(mktemp)"
+          trap 'rm -f "$settings_file"' EXIT
+          export CONTACT_SETTINGS_PATH="$settings_file"
+          python - <<'PY'
+          import json, os
+          secret = os.environ.get('CONTACT_PUSH_SECRET', '')
+          if len(secret) < 32:
+              raise SystemExit('Missing contact push repository secret.')
+          with open(os.environ['CONTACT_SETTINGS_PATH'], 'w', encoding='utf-8') as stream:
+              json.dump({'CONTACT_PUSH_SECRET': secret}, stream)
+          PY
+          az webapp config appsettings set --resource-group SoftlutionicREC --name softlutionic-sistema --settings "@$settings_file" --output none
+
       - name: 'Deploy to Azure Web App'
         uses: azure/webapps-deploy@v3
         id: deploy-to-webapp
